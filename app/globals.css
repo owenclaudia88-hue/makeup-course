@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #fbf6f2;
+  color: #2c2024;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  .container-tight {
+    @apply mx-auto w-full max-w-5xl px-5;
+  }
+  .container-narrow {
+    @apply mx-auto w-full max-w-2xl px-5;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-rose px-8 py-4 text-center text-base font-semibold text-white shadow-soft transition hover:bg-rose-dark active:scale-[0.99] sm:text-lg;
+  }
+  .btn-primary-lg {
+    @apply inline-flex w-full items-center justify-center gap-2 rounded-full bg-rose px-8 py-5 text-center text-lg font-bold uppercase tracking-wide text-white shadow-soft transition hover:bg-rose-dark active:scale-[0.99];
+  }
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.2em] text-rose;
+  }
+  .card {
+    @apply rounded-2xl border border-blush bg-white shadow-card;
+  }
+}
