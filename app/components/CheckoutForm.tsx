@@ -28,13 +28,9 @@ export default function CheckoutForm({ paymentIntentId }: { paymentIntentId: str
 
     setLoading(true);
 
-    // Validate the Payment Element, then attach the email server-side.
-    const { error: submitError } = await elements.submit();
-    if (submitError) {
-      setError(submitError.message || "Kontrollera kortuppgifterna.");
-      setLoading(false);
-      return;
-    }
+    // Attach the email to the PaymentIntent server-side, then confirm.
+    // (No elements.submit() — that's only for the deferred integration; here
+    // Elements is created with a clientSecret and confirmPayment validates.)
     await fetch("/api/checkout/details", {
       method: "POST",
       headers: { "content-type": "application/json" },
