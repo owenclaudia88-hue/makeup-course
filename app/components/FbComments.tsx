@@ -44,7 +44,7 @@ const comments: Comment[] = [
     name: "Marie Nilsson",
     initials: "MN",
     color: "bg-emerald-500",
-    text: "20 kr för det här är nästan löjligt billigt. Har betalat hundra gånger mer för sämre kurser.",
+    text: "10 kr för det här är nästan löjligt billigt. Har betalat hundra gånger mer för sämre kurser.",
     time: "2 d",
     likes: 88,
   },

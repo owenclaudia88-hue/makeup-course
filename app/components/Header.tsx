@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { brand, mainDiscountPct } from "@/lib/offer";
+import { brand, mainOffer, formatKr, mainDiscountPct } from "@/lib/offer";
 
 export default function Header() {
   return (
@@ -17,7 +17,7 @@ export default function Header() {
           href="/kassa"
           className="rounded-full bg-rose px-4 py-2 text-sm font-semibold text-white shadow-soft transition hover:bg-rose-dark sm:px-5"
         >
-          Kom igång · 20 kr
+          Kom igång · {formatKr(mainOffer.priceOre)}
           <span className="ml-1 hidden rounded-full bg-white/20 px-2 py-0.5 text-[11px] sm:inline">
             -{mainDiscountPct()}%
           </span>

@@ -2,6 +2,7 @@ import Header from "./components/Header";
 import CtaButton from "./components/CtaButton";
 import Countdown from "./components/Countdown";
 import FbComments from "./components/FbComments";
+import SmartImg from "./components/SmartImg";
 import { brand, mainOffer, bonuses, formatKr, mainDiscountPct, totalStackValueOre } from "@/lib/offer";
 
 const lessons = [
@@ -97,16 +98,7 @@ function Stars({ n = 5 }: { n?: number }) {
   );
 }
 
-/** Placeholder image box — replace src/labels with real photography later. */
-function Photo({ label, className = "" }: { label: string; className?: string }) {
-  return (
-    <div
-      className={`flex items-center justify-center rounded-2xl border border-blush bg-gradient-to-br from-blush via-cream to-white text-center text-sm font-medium text-muted ${className}`}
-    >
-      <span className="px-4">📷 {label}</span>
-    </div>
-  );
-}
+// Image slots use <SmartImg /> — drop your files into /public (see public/README.txt).
 
 export default function Page() {
   const reg = mainOffer.regularPriceOre ?? 0;
@@ -148,7 +140,7 @@ export default function Page() {
             </div>
 
             <div className="mt-6">
-              <CtaButton large>Ja, jag vill ha kursen för 20 kr →</CtaButton>
+              <CtaButton large>Ja, jag vill ha kursen för {formatKr(mainOffer.priceOre)} →</CtaButton>
               <p className="mt-3 text-sm text-muted">
                 ⏳ Introduktionspriset gäller idag i <Countdown /> · Säker betalning ·
                 Direkt nedladdning
@@ -157,7 +149,12 @@ export default function Page() {
           </div>
 
           <div className="animate-fade-up">
-            <Photo label="Hjältebild: före/efter 40+ look" className="aspect-[4/5] w-full" />
+            <SmartImg
+              src="/hero.jpg"
+              alt="10 Min Makeup 40+ – se 10 år yngre ut på 10 minuter"
+              label="Hjältebild (public/hero.jpg)"
+              className="aspect-[16/9] w-full"
+            />
           </div>
         </div>
       </section>
@@ -209,7 +206,12 @@ export default function Page() {
       {/* SOLUTION */}
       <section className="bg-white py-16 sm:py-20">
         <div className="container-tight grid items-center gap-10 lg:grid-cols-2">
-          <Photo label="Instruktör / proffs-makeupartist" className="aspect-[4/3] w-full" />
+          <SmartImg
+            src="/instruktor.jpg"
+            alt="Proffs-makeupartist visar 10-minutersrutinen"
+            label="Instruktör (public/instruktor.jpg)"
+            className="aspect-[4/3] w-full"
+          />
           <div>
             <p className="eyebrow mb-3">Lösningen</p>
             <h2 className="font-serif text-3xl font-bold text-ink sm:text-4xl">

@@ -14,7 +14,7 @@ export async function POST() {
     );
   }
 
-  // One paid line item: the 20 kr course. The bonuses are free and bundled —
+  // One paid line item: the 10 kr course. The bonuses are free and bundled —
   // they aren't charged, but every delivered product id is recorded in metadata
   // so the thank-you page unlocks downloads for the course AND the bonuses.
   const line_items = [

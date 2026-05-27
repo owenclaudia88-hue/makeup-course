@@ -31,7 +31,7 @@ export const mainOffer: Product = {
   name: "10 Min Makeup 40+ – Mästarkursen",
   blurb:
     "Hela proffsguiden till att se yngre, fräschare och mer självsäker ut på 10 minuter. 9 djupgående lektioner, proffstips, do's & don'ts och checklistor.",
-  priceOre: 2000, // 20 kr
+  priceOre: 1000, // 10 kr
   regularPriceOre: 39700, // 397 kr — sätt till ert verkliga ordinarie pris
   file: "10MinMakeup40_MasterCourse.pdf",
 };
@@ -74,10 +74,12 @@ export function productById(id: string): Product | undefined {
   return allProducts.find((p) => p.id === id);
 }
 
-/** Format öre as Swedish kr, e.g. 2000 -> "20 kr", 39700 -> "397 kr". */
+/** Format öre as Swedish kr, e.g. 1000 -> "10 kr", 103800 -> "1 038 kr". */
 export function formatKr(ore: number): string {
   const kr = ore / 100;
-  const str = Number.isInteger(kr) ? String(kr) : kr.toFixed(2).replace(".", ",");
+  const str = Number.isInteger(kr)
+    ? kr.toLocaleString("sv-SE")
+    : kr.toLocaleString("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   return `${str} kr`;
 }
 

@@ -21,6 +21,14 @@ export const metadata: Metadata = {
   description:
     "Se yngre, fräschare och mer självsäker ut på 10 minuter. Proffsguiden för dig över 40 – 9 lektioner, checklistor och en komplett 10-minutersrutin.",
   robots: { index: true, follow: true },
+  openGraph: {
+    title: `${brand.name} – 10 Min Makeup 40+`,
+    description:
+      "Se 10 år yngre ut på 10 minuter om dagen. Proffsguiden för dig över 40.",
+    images: ["/hero.jpg"],
+    locale: "sv_SE",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
