@@ -1,41 +1,23 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { brand, mainOffer, upsells, formatKr } from "@/lib/offer";
+import { brand, mainOffer, bonuses, formatKr } from "@/lib/offer";
 import { fbqTrack } from "../components/MetaPixel";
 
 export default function KassaPage() {
-  const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fbqTrack("InitiateCheckout", {
-      currency: "SEK",
-      value: mainOffer.priceOre / 100,
-    });
+    fbqTrack("InitiateCheckout", { currency: "SEK", value: mainOffer.priceOre / 100 });
   }, []);
-
-  const chosenUpsells = useMemo(
-    () => upsells.filter((u) => selected[u.id]),
-    [selected]
-  );
-
-  const total = useMemo(
-    () => mainOffer.priceOre + chosenUpsells.reduce((s, u) => s + u.priceOre, 0),
-    [chosenUpsells]
-  );
 
   async function pay() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ upsells: chosenUpsells.map((u) => u.id) }),
-      });
+      const res = await fetch("/api/checkout", { method: "POST" });
       const data = await res.json();
       if (data?.notConfigured) {
         setError(
@@ -83,37 +65,39 @@ export default function KassaPage() {
             </div>
           </div>
 
-          {/* Add-ons */}
+          {/* Included free bonuses */}
           <p className="mt-5 text-sm font-semibold uppercase tracking-wide text-muted">
-            Lägg till (valfritt)
+            Ingår gratis idag
           </p>
           <div className="mt-3 space-y-3">
-            {upsells.map((u) => (
-              <label
-                key={u.id}
-                className="flex cursor-pointer items-start gap-3 rounded-xl border border-blush bg-cream/60 p-4 transition hover:border-rose"
+            {bonuses.map((b) => (
+              <div
+                key={b.id}
+                className="flex items-start gap-3 rounded-xl border border-blush bg-cream/60 p-4"
               >
-                <input
-                  type="checkbox"
-                  className="mt-1 h-5 w-5 accent-rose"
-                  checked={!!selected[u.id]}
-                  onChange={(e) =>
-                    setSelected((s) => ({ ...s, [u.id]: e.target.checked }))
-                  }
-                />
+                <span className="mt-0.5 text-lg">🎁</span>
                 <span className="flex-1">
-                  <span className="block font-medium text-ink">{u.name}</span>
-                  <span className="block text-sm text-muted">{u.blurb}</span>
+                  <span className="block font-medium text-ink">{b.name}</span>
+                  <span className="block text-sm text-muted">{b.blurb}</span>
                 </span>
-                <span className="font-semibold text-rose-dark">+{formatKr(u.priceOre)}</span>
-              </label>
+                <span className="text-right">
+                  {b.regularPriceOre && (
+                    <span className="block text-sm text-muted line-through">
+                      {formatKr(b.regularPriceOre)}
+                    </span>
+                  )}
+                  <span className="block font-semibold text-rose-dark">0 kr</span>
+                </span>
+              </div>
             ))}
           </div>
 
           {/* Total */}
           <div className="mt-6 flex items-center justify-between border-t border-blush pt-4">
             <span className="font-semibold text-ink">Att betala</span>
-            <span className="font-serif text-2xl font-bold text-rose-dark">{formatKr(total)}</span>
+            <span className="font-serif text-2xl font-bold text-rose-dark">
+              {formatKr(mainOffer.priceOre)}
+            </span>
           </div>
 
           {error && (
@@ -121,7 +105,7 @@ export default function KassaPage() {
           )}
 
           <button onClick={pay} disabled={loading} className="btn-primary-lg mt-5 disabled:opacity-60">
-            {loading ? "Förbereder…" : `Betala ${formatKr(total)} →`}
+            {loading ? "Förbereder…" : `Betala ${formatKr(mainOffer.priceOre)} →`}
           </button>
           <p className="mt-3 text-center text-sm text-muted">
             🔒 Engångsbetalning · ingen prenumeration · 30 dagars garanti

@@ -3,7 +3,7 @@
 A standalone Swedish sales funnel for the **10 Min Makeup 40+** course:
 
 - Long-form Swedish sales page (`/`)
-- 20 kr entry offer + optional cheap add-ons (order bumps) at checkout (`/kassa`)
+- 20 kr entry offer with 3 free value-stacked bonus guides bundled in (`/kassa`)
 - A single, real **Stripe Checkout** — the same page for everyone, no cloaking
 - The actual course delivered as a gated PDF download after payment (`/tack`)
 - Optional Meta Pixel for conversion tracking
@@ -33,7 +33,7 @@ Without Stripe keys the whole page works and the checkout button shows a
 
 ## Configuration — one file
 
-Everything (brand name, prices, products, add-ons, filenames) lives in
+Everything (brand name, prices, products, bonuses, filenames) lives in
 [`lib/offer.ts`](lib/offer.ts). Change the brand or prices there and the whole
 funnel updates. Prices are in **öre** (20 kr = `2000`), currency SEK.
 
@@ -63,7 +63,7 @@ See `.env.example`. `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`,
 | Route | What |
 |---|---|
 | `/` | Sales page |
-| `/kassa` | Checkout (main offer + add-on bumps) → Stripe |
+| `/kassa` | Checkout (20 kr course + free bonuses) → Stripe |
 | `/tack` | Success + gated downloads |
 | `/api/checkout` | Creates the Stripe Checkout Session |
 | `/api/download` | Serves a course file after verifying a paid session |

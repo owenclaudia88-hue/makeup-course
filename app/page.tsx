@@ -1,7 +1,8 @@
 import Header from "./components/Header";
 import CtaButton from "./components/CtaButton";
 import Countdown from "./components/Countdown";
-import { brand, mainOffer, upsells, formatKr, mainDiscountPct } from "@/lib/offer";
+import FbComments from "./components/FbComments";
+import { brand, mainOffer, bonuses, formatKr, mainDiscountPct, totalStackValueOre } from "@/lib/offer";
 
 const lessons = [
   {
@@ -63,26 +64,7 @@ const routine = [
   ["9–10 min", "Kontroll", "Kolla i dagsljus. Blanda kanter. Transparent puder bara på glansiga zoner."],
 ];
 
-const reviews = [
-  {
-    stars: 5,
-    text:
-      "Jag ser 10 år yngre ut efter det här. Skillnaden bara av under-ögon-tekniken är obegriplig.",
-    name: "Kelsey P.",
-  },
-  {
-    stars: 5,
-    text:
-      "10 Min Makeup gjorde mig sååå självsäker. Jag hade glömt hur det kändes att se sig i spegeln och må bra.",
-    name: "Eliza M.",
-  },
-  {
-    stars: 5,
-    text:
-      "Äntligen smink anpassat efter min hud nu – inte reglerna jag lärde mig som 25. Tar mig faktiskt 10 minuter.",
-    name: "Anna L.",
-  },
-];
+// Testimonials now live in app/components/FbComments.tsx (rolling FB-style).
 
 const faqs = [
   {
@@ -305,21 +287,35 @@ export default function Page() {
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
-      <section className="py-16 sm:py-20">
+      {/* TESTIMONIALS — Facebook-style, auto-rolling */}
+      <FbComments />
+
+      {/* BONUSES */}
+      <section className="bg-white py-16 sm:py-20">
         <div className="container-narrow text-center">
-          <p className="eyebrow mb-3">Vad kvinnor säger</p>
+          <p className="eyebrow mb-3">Ingår gratis idag</p>
           <h2 className="font-serif text-3xl font-bold text-ink sm:text-4xl">
-            Riktiga resultat, riktiga ord
+            {bonuses.length} bonusguider på köpet — 0 kr extra
           </h2>
+          <p className="mt-3 text-muted">
+            Värde {formatKr(bonuses.reduce((s, b) => s + (b.regularPriceOre ?? 0), 0))} — idag helt
+            utan kostnad när du startar för {formatKr(mainOffer.priceOre)}.
+          </p>
         </div>
         <div className="container-tight mt-10 grid gap-5 md:grid-cols-3">
-          {reviews.map((r) => (
-            <figure key={r.name} className="card flex flex-col p-6">
-              <Stars n={r.stars} />
-              <blockquote className="mt-3 grow text-ink">”{r.text}”</blockquote>
-              <figcaption className="mt-4 text-sm font-semibold text-muted">— {r.name}</figcaption>
-            </figure>
+          {bonuses.map((b) => (
+            <div key={b.id} className="card relative flex flex-col p-6">
+              <span className="absolute right-4 top-4 rounded-full bg-rose px-2.5 py-1 text-xs font-bold text-white">
+                BONUS
+              </span>
+              <span className="text-3xl">🎁</span>
+              <h3 className="mt-3 font-serif text-lg font-bold text-ink">{b.name}</h3>
+              <p className="mt-2 grow text-sm text-muted">{b.blurb}</p>
+              <p className="mt-4 text-sm">
+                <span className="text-muted line-through">{formatKr(b.regularPriceOre ?? 0)}</span>{" "}
+                <span className="font-bold text-rose-dark">idag 0 kr</span>
+              </p>
+            </div>
           ))}
         </div>
       </section>
@@ -338,29 +334,43 @@ export default function Page() {
                 {mainOffer.name}
               </h2>
 
-              <ul className="mx-auto mt-6 max-w-md space-y-3">
-                {[
-                  `Hela mästarkursen – 9 lektioner (värde ${formatKr(reg)})`,
-                  "Checklistor för varje lektion",
-                  "Komplett 10-minutersrutin steg för steg",
-                  "Do's & don'ts för moget hud",
-                  "Direkt nedladdning – din för alltid",
-                ].map((t) => (
-                  <li key={t} className="flex items-start gap-3">
-                    <span className="mt-0.5 font-bold text-rose">✓</span>
-                    <span className="text-ink">{t}</span>
+              <ul className="mx-auto mt-6 max-w-md space-y-2.5">
+                <li className="flex items-center justify-between gap-3">
+                  <span className="text-ink">
+                    <span className="mr-1 font-bold text-rose">✓</span> Hela mästarkursen – 9
+                    lektioner
+                  </span>
+                  <span className="shrink-0 text-sm text-muted line-through">{formatKr(reg)}</span>
+                </li>
+                {bonuses.map((b) => (
+                  <li key={b.id} className="flex items-center justify-between gap-3">
+                    <span className="text-ink">
+                      <span className="mr-1">🎁</span> {b.name.split(":")[0]}{" "}
+                      <span className="text-xs font-semibold text-rose">(bonus)</span>
+                    </span>
+                    <span className="shrink-0 text-sm text-muted line-through">
+                      {formatKr(b.regularPriceOre ?? 0)}
+                    </span>
                   </li>
                 ))}
+                <li className="mt-1 flex items-center justify-between gap-3 border-t border-blush pt-3">
+                  <span className="font-semibold text-ink">Totalt värde</span>
+                  <span className="shrink-0 font-semibold text-muted line-through">
+                    {formatKr(totalStackValueOre())}
+                  </span>
+                </li>
               </ul>
 
               <div className="mt-8 text-center">
                 <div className="flex items-end justify-center gap-3">
-                  <span className="text-xl text-muted line-through">{formatKr(reg)}</span>
+                  <span className="text-xl text-muted line-through">{formatKr(totalStackValueOre())}</span>
                   <span className="font-serif text-6xl font-bold text-rose-dark">
                     {formatKr(mainOffer.priceOre)}
                   </span>
                 </div>
-                <p className="mt-1 text-sm text-muted">Engångsbetalning. Ingen prenumeration.</p>
+                <p className="mt-1 text-sm text-muted">
+                  Allt ovan ingår · engångsbetalning · ingen prenumeration.
+                </p>
 
                 <div className="mx-auto mt-6 max-w-md">
                   <CtaButton large>Lås upp kursen för {formatKr(mainOffer.priceOre)} →</CtaButton>
@@ -371,9 +381,9 @@ export default function Page() {
               </div>
 
               <div className="mt-8 rounded-xl bg-cream p-4 text-center text-sm text-muted">
-                <span className="font-semibold text-ink">Vill du ha mer?</span> I kassan kan du lägga
-                till våra extraguider för bara {formatKr(upsells[0].priceOre)} st —{" "}
-                {upsells.map((u) => u.name.split(":")[0]).join(", ")}.
+                <span className="font-semibold text-ink">Allt ingår gratis idag</span> —{" "}
+                {bonuses.length} bonusguider ({bonuses.map((b) => b.name.split(":")[0]).join(", ")})
+                följer med utan extra kostnad.
               </div>
             </div>
           </div>

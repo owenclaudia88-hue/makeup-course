@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { getStripe, baseUrl } from "@/lib/stripe";
-import { mainOffer, productById, CURRENCY, type Product } from "@/lib/offer";
+import { mainOffer, deliveredProductIds, CURRENCY } from "@/lib/offer";
 
 export const runtime = "nodejs";
 
-export async function POST(req: Request) {
+export async function POST() {
   const stripe = getStripe();
   if (!stripe) {
     // No keys yet — let the UI show a friendly message instead of 500.
@@ -14,39 +14,28 @@ export async function POST(req: Request) {
     );
   }
 
-  let selectedUpsells: string[] = [];
-  try {
-    const body = await req.json();
-    if (Array.isArray(body?.upsells)) selectedUpsells = body.upsells.map(String);
-  } catch {
-    // no body / bad body -> just the main offer
-  }
-
-  // Always include the main offer; add any valid upsell add-ons.
-  const products: Product[] = [mainOffer];
-  for (const id of selectedUpsells) {
-    const p = productById(id);
-    if (p && p.id !== mainOffer.id && !products.includes(p)) products.push(p);
-  }
-
-  const line_items = products.map((p) => ({
-    quantity: 1,
-    price_data: {
-      currency: CURRENCY,
-      unit_amount: p.priceOre,
-      product_data: { name: p.name, description: p.blurb },
+  // One paid line item: the 20 kr course. The bonuses are free and bundled —
+  // they aren't charged, but every delivered product id is recorded in metadata
+  // so the thank-you page unlocks downloads for the course AND the bonuses.
+  const line_items = [
+    {
+      quantity: 1,
+      price_data: {
+        currency: CURRENCY,
+        unit_amount: mainOffer.priceOre,
+        product_data: { name: mainOffer.name, description: mainOffer.blurb },
+      },
     },
-  }));
+  ];
 
   try {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       locale: "sv",
       line_items,
-      metadata: { productIds: products.map((p) => p.id).join(",") },
+      metadata: { productIds: deliveredProductIds.join(",") },
       success_url: `${baseUrl()}/tack?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl()}/kassa`,
-      // Digital goods: collect email for receipt + delivery.
       customer_creation: "always",
     });
 

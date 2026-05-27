@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------------------
 // Single source of truth for branding, products and pricing.
-// All Stripe amounts are in öre (1 kr = 100 öre), SEK currency.
+// All amounts are in öre (1 kr = 100 öre), SEK currency.
 // Change anything here and the whole funnel updates.
 // ---------------------------------------------------------------------------
 
@@ -18,10 +18,11 @@ export type Product = {
   name: string;
   blurb: string;
   priceOre: number;
-  // Regular price shown as the "ordinarie pris". Set this to a price you
-  // genuinely intend to sell at outside the launch — do not invent a fake anchor.
+  // The "ordinarie pris" / "värde" shown struck-through. For the main offer it's
+  // the regular price; for a free bonus it's its standalone value. Set these to
+  // prices you genuinely intend to sell at — don't invent a fake anchor.
   regularPriceOre?: number;
-  // File served (gated) after a paid purchase. Lives in /protected, never in /public.
+  // File served (gated) after a paid purchase. Lives in /protected, never /public.
   file: string;
 };
 
@@ -35,32 +36,39 @@ export const mainOffer: Product = {
   file: "10MinMakeup40_MasterCourse.pdf",
 };
 
-// Cheap one-click add-ons (order bumps). ~5 kr each.
-export const upsells: Product[] = [
+// Free bonuses that come bundled with the main offer (priceOre = 0). The
+// regularPriceOre is the stated "värde" shown struck-through next to "0 kr".
+export const bonuses: Product[] = [
   {
     id: "face-sculpt",
     name: "Face Sculpt: Ansiktsritual för ett yngre ansikte",
     blurb: "Daglig 5-minutersritual som lyfter och definierar ansiktet naturligt.",
-    priceOre: 500, // 5 kr
+    priceOre: 0,
+    regularPriceOre: 19700, // värde 197 kr
     file: "FaceSculpt_Ritual.pdf",
   },
   {
     id: "lymph-detox",
     name: "21-dagars Lymfdetox: Smalare ansikte & kropp",
     blurb: "Enkel daglig lymfmassage för mindre svullnad och en skarpare käklinje.",
-    priceOre: 500,
+    priceOre: 0,
+    regularPriceOre: 24700, // värde 247 kr
     file: "LymphDetox_21Day.pdf",
   },
   {
     id: "face-lifting",
     name: "Face Lifting: Forma ansiktet & se yngre ut",
     blurb: "Lyftande tekniker för panna, kinder och käke – helt utan nålar.",
-    priceOre: 500,
+    priceOre: 0,
+    regularPriceOre: 19700, // värde 197 kr
     file: "FaceLifting_Guide.pdf",
   },
 ];
 
-export const allProducts: Product[] = [mainOffer, ...upsells];
+export const allProducts: Product[] = [mainOffer, ...bonuses];
+
+// Everything the buyer gets access to after paying (main + all free bonuses).
+export const deliveredProductIds: string[] = allProducts.map((p) => p.id);
 
 export function productById(id: string): Product | undefined {
   return allProducts.find((p) => p.id === id);
@@ -77,4 +85,9 @@ export function formatKr(ore: number): string {
 export function mainDiscountPct(): number {
   if (!mainOffer.regularPriceOre) return 0;
   return Math.round((1 - mainOffer.priceOre / mainOffer.regularPriceOre) * 100);
+}
+
+/** Total stated value of everything in the offer (course + all bonuses). */
+export function totalStackValueOre(): number {
+  return allProducts.reduce((sum, p) => sum + (p.regularPriceOre ?? p.priceOre), 0);
 }
