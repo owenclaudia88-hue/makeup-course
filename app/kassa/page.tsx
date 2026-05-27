@@ -2,40 +2,40 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { brand, mainOffer, bonuses, formatKr } from "@/lib/offer";
+import { Elements } from "@stripe/react-stripe-js";
+import { brand, mainOffer, bonuses, membership, formatKr } from "@/lib/offer";
+import { getStripePromise } from "@/lib/stripe-client";
+import CheckoutForm from "../components/CheckoutForm";
 import { fbqTrack } from "../components/MetaPixel";
 
 export default function KassaPage() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [stripePromise] = useState(() => getStripePromise());
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
+  const [status, setStatus] = useState<"loading" | "ready" | "unconfigured" | "error">("loading");
 
   useEffect(() => {
     fbqTrack("InitiateCheckout", { currency: "SEK", value: mainOffer.priceOre / 100 });
-  }, []);
-
-  async function pay() {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/checkout", { method: "POST" });
-      const data = await res.json();
-      if (data?.notConfigured) {
-        setError(
-          "Betalning är inte konfigurerad än. Lägg in STRIPE_SECRET_KEY i .env.local för att testa hela flödet."
-        );
-        return;
+    (async () => {
+      try {
+        const res = await fetch("/api/checkout", { method: "POST" });
+        const data = await res.json();
+        if (data?.notConfigured || !stripePromise) {
+          setStatus("unconfigured");
+          return;
+        }
+        if (data?.clientSecret) {
+          setClientSecret(data.clientSecret);
+          setPaymentIntentId(data.paymentIntentId);
+          setStatus("ready");
+        } else {
+          setStatus("error");
+        }
+      } catch {
+        setStatus("error");
       }
-      if (data?.url) {
-        window.location.href = data.url as string;
-        return;
-      }
-      setError(data?.error || "Något gick fel. Försök igen.");
-    } catch {
-      setError("Något gick fel. Försök igen.");
-    } finally {
-      setLoading(false);
-    }
-  }
+    })();
+  }, [stripePromise]);
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-blush/50 to-cream">
@@ -46,8 +46,8 @@ export default function KassaPage() {
         <h1 className="mt-4 font-serif text-3xl font-bold text-ink">Slutför din beställning</h1>
         <p className="mt-1 text-muted">{brand.name} · säker betalning via Stripe</p>
 
+        {/* Order summary */}
         <div className="card mt-6 p-6">
-          {/* Main item */}
           <div className="flex items-start justify-between gap-4 border-b border-blush pb-4">
             <div>
               <p className="font-semibold text-ink">{mainOffer.name}</p>
@@ -65,51 +65,80 @@ export default function KassaPage() {
             </div>
           </div>
 
-          {/* Included free bonuses */}
-          <p className="mt-5 text-sm font-semibold uppercase tracking-wide text-muted">
-            Ingår gratis idag
-          </p>
-          <div className="mt-3 space-y-3">
-            {bonuses.map((b) => (
-              <div
-                key={b.id}
-                className="flex items-start gap-3 rounded-xl border border-blush bg-cream/60 p-4"
-              >
-                <span className="mt-0.5 text-lg">🎁</span>
-                <span className="flex-1">
-                  <span className="block font-medium text-ink">{b.name}</span>
-                  <span className="block text-sm text-muted">{b.blurb}</span>
-                </span>
-                <span className="text-right">
-                  {b.regularPriceOre && (
-                    <span className="block text-sm text-muted line-through">
-                      {formatKr(b.regularPriceOre)}
-                    </span>
-                  )}
-                  <span className="block font-semibold text-rose-dark">0 kr</span>
-                </span>
-              </div>
-            ))}
+          {/* Membership trial */}
+          <div className="flex items-start justify-between gap-4 border-b border-blush py-4">
+            <div>
+              <p className="font-semibold text-ink">
+                {membership.name} – {membership.trialDays} dagars provtillgång 🎁
+              </p>
+              <p className="text-sm text-muted">
+                Tillgång till {membership.courses}+ kurser. Därefter {formatKr(membership.monthlyPriceOre)}/mån
+                – avsluta när som helst.
+              </p>
+            </div>
+            <div className="text-right">
+              <div className="font-semibold text-rose-dark">0 kr idag</div>
+            </div>
           </div>
 
-          {/* Total */}
-          <div className="mt-6 flex items-center justify-between border-t border-blush pt-4">
-            <span className="font-semibold text-ink">Att betala</span>
+          {/* Free bonuses */}
+          <p className="mt-4 text-sm font-semibold uppercase tracking-wide text-muted">
+            Ingår gratis
+          </p>
+          <ul className="mt-2 space-y-1.5">
+            {bonuses.map((b) => (
+              <li key={b.id} className="flex items-center justify-between text-sm">
+                <span className="text-ink">🎁 {b.name.split(":")[0]}</span>
+                <span className="text-rose-dark">0 kr</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-5 flex items-center justify-between border-t border-blush pt-4">
+            <span className="font-semibold text-ink">Att betala idag</span>
             <span className="font-serif text-2xl font-bold text-rose-dark">
               {formatKr(mainOffer.priceOre)}
             </span>
           </div>
+        </div>
 
-          {error && (
-            <p className="mt-4 rounded-lg bg-rose/10 p-3 text-sm text-rose-dark">{error}</p>
+        {/* Payment */}
+        <div className="card mt-5 p-6">
+          {status === "loading" && <p className="text-muted">Förbereder säker betalning…</p>}
+
+          {status === "unconfigured" && (
+            <p className="rounded-lg bg-rose/10 p-3 text-sm text-rose-dark">
+              Betalning är inte konfigurerad än. Lägg in dina Stripe-nycklar i <code>.env.local</code>{" "}
+              (STRIPE_SECRET_KEY + NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) för att testa hela flödet.
+            </p>
           )}
 
-          <button onClick={pay} disabled={loading} className="btn-primary-lg mt-5 disabled:opacity-60">
-            {loading ? "Förbereder…" : `Betala ${formatKr(mainOffer.priceOre)} →`}
-          </button>
-          <p className="mt-3 text-center text-sm text-muted">
-            🔒 Engångsbetalning · ingen prenumeration · 30 dagars garanti
-          </p>
+          {status === "error" && (
+            <p className="rounded-lg bg-rose/10 p-3 text-sm text-rose-dark">
+              Något gick fel när betalningen skulle förberedas. Ladda om sidan och försök igen.
+            </p>
+          )}
+
+          {status === "ready" && clientSecret && stripePromise && paymentIntentId && (
+            <Elements
+              stripe={stripePromise}
+              options={{
+                clientSecret,
+                locale: "sv",
+                appearance: {
+                  theme: "stripe",
+                  variables: {
+                    colorPrimary: "#B14A6B",
+                    colorText: "#2C2024",
+                    fontFamily: "system-ui, sans-serif",
+                    borderRadius: "10px",
+                  },
+                },
+              }}
+            >
+              <CheckoutForm paymentIntentId={paymentIntentId} />
+            </Elements>
+          )}
         </div>
       </div>
     </main>

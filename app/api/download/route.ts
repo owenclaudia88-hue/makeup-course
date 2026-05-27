@@ -9,30 +9,30 @@ export const runtime = "nodejs";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const sessionId = searchParams.get("session_id") || "";
+  const piId = searchParams.get("pi") || "";
   const token = searchParams.get("token") || "";
 
-  if (!sessionId || !token) {
+  if (!piId || !token) {
     return new NextResponse("Saknar parametrar.", { status: 400 });
   }
 
-  // 1) Token must be valid for this session.
-  const productId = verifyToken(sessionId, token);
+  // 1) Token must be valid for this PaymentIntent.
+  const productId = verifyToken(piId, token);
   if (!productId) return new NextResponse("Ogiltig länk.", { status: 403 });
 
   const product = productById(productId);
   if (!product) return new NextResponse("Okänd produkt.", { status: 404 });
 
-  // 2) The Stripe session must actually be paid and include this product.
+  // 2) The PaymentIntent must be paid and include this product.
   const stripe = getStripe();
   if (!stripe) return new NextResponse("Betalning ej konfigurerad.", { status: 503 });
 
   try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-    if (session.payment_status !== "paid") {
+    const pi = await stripe.paymentIntents.retrieve(piId);
+    if (pi.status !== "succeeded") {
       return new NextResponse("Betalning ej genomförd.", { status: 403 });
     }
-    const ids = (session.metadata?.productIds ?? "").split(",").map((s) => s.trim());
+    const ids = (pi.metadata?.productIds ?? "").split(",").map((s) => s.trim());
     if (!ids.includes(productId)) {
       return new NextResponse("Produkten ingår inte i detta köp.", { status: 403 });
     }

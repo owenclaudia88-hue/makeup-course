@@ -65,6 +65,21 @@ export const bonuses: Product[] = [
   },
 ];
 
+// The Lumora Membership — a real subscription with a disclosed 3-day trial.
+// Presented as a bonus, but its renewal terms must always be shown clearly
+// (price + interval + cancel) next to a consent checkbox before payment.
+export const membership = {
+  id: "lumora-membership",
+  name: "Lumora Membership",
+  monthlyPriceOre: 40700, // 407 kr/mån
+  trialDays: 3,
+  courses: 206,
+  // Stripe Price is created once via the API using this lookup_key, then reused.
+  lookupKey: "lumora_membership_monthly_sek",
+  // Where members are sent to access the platform (set the real URL in env).
+  platformUrl: process.env.NEXT_PUBLIC_LUMORA_PLATFORM_URL || "https://newmindstart.com",
+};
+
 export const allProducts: Product[] = [mainOffer, ...bonuses];
 
 // Everything the buyer gets access to after paying (main + all free bonuses).

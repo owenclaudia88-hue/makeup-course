@@ -3,7 +3,7 @@ import CtaButton from "./components/CtaButton";
 import Countdown from "./components/Countdown";
 import FbComments from "./components/FbComments";
 import SmartImg from "./components/SmartImg";
-import { brand, mainOffer, bonuses, formatKr, mainDiscountPct, totalStackValueOre } from "@/lib/offer";
+import { brand, mainOffer, bonuses, membership, formatKr, mainDiscountPct, totalStackValueOre } from "@/lib/offer";
 
 const lessons = [
   {
@@ -382,10 +382,16 @@ export default function Page() {
                 </p>
               </div>
 
-              <div className="mt-8 rounded-xl bg-cream p-4 text-center text-sm text-muted">
-                <span className="font-semibold text-ink">Allt ingår gratis idag</span> —{" "}
-                {bonuses.length} bonusguider ({bonuses.map((b) => b.name.split(":")[0]).join(", ")})
-                följer med utan extra kostnad.
+              <div className="mt-8 space-y-2 rounded-xl bg-cream p-4 text-center text-sm text-muted">
+                <p>
+                  <span className="font-semibold text-ink">Ingår idag:</span> {bonuses.length}{" "}
+                  bonusguider gratis + {membership.trialDays} dagars provtillgång till{" "}
+                  {membership.name} ({membership.courses}+ kurser).
+                </p>
+                <p className="text-xs">
+                  Provperioden övergår till {formatKr(membership.monthlyPriceOre)}/mån efter{" "}
+                  {membership.trialDays} dagar om du inte avslutar. Avsluta när som helst.
+                </p>
               </div>
             </div>
           </div>
