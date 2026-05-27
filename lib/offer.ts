@@ -7,10 +7,10 @@
 export const CURRENCY = "sek";
 
 export const brand = {
-  name: "Lumora",
+  name: "Luumora",
   // Rename in this one place to rebrand the whole site.
   tagline: "10 minuters makeup som tar 10 år",
-  supportEmail: "support@lumora.se",
+  supportEmail: "support@luumora.online",
 };
 
 export type Product = {
@@ -65,12 +65,12 @@ export const bonuses: Product[] = [
   },
 ];
 
-// The Lumora Membership — a real subscription with a disclosed 3-day trial.
+// The Luumora Membership — a real subscription with a disclosed 3-day trial.
 // Presented as a bonus, but its renewal terms must always be shown clearly
 // (price + interval + cancel) next to a consent checkbox before payment.
 export const membership = {
   id: "lumora-membership",
-  name: "Lumora Membership",
+  name: "Luumora Membership",
   monthlyPriceOre: 40700, // 407 kr/mån
   trialDays: 3,
   courses: 206,

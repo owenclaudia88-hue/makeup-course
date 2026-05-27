@@ -1,4 +1,4 @@
-# makeup-lander — Lumora · 10 Min Makeup 40+
+# makeup-lander — Luumora · 10 Min Makeup 40+
 
 A standalone Swedish sales funnel for the **10 Min Makeup 40+** course:
 

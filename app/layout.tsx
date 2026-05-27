@@ -17,6 +17,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://luumora.online"),
   title: `${brand.name} – 10 Min Makeup 40+`,
   description:
     "Se yngre, fräschare och mer självsäker ut på 10 minuter. Proffsguiden för dig över 40 – 9 lektioner, checklistor och en komplett 10-minutersrutin.",
