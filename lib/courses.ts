@@ -208,6 +208,7 @@ export const courses: Course[] = [
   },
   {
     slug: "ansiktsyoga",
+    pdf: "ansiktsyoga.pdf",
     title: "Ansiktsyoga: Lyft ansiktet på 10 minuter",
     category: "Skönhet",
     level: "Nybörjare",
@@ -270,6 +271,7 @@ export const courses: Course[] = [
   },
   {
     slug: "hudvard-40",
+    pdf: "hudvard-40.pdf",
     title: "Hudvård efter 40",
     category: "Skönhet",
     level: "Nybörjare",
@@ -307,6 +309,7 @@ export const courses: Course[] = [
   },
   {
     slug: "battre-somn",
+    pdf: "battre-somn.pdf",
     title: "Bättre sömn: en kvällsrutin som funkar",
     category: "Välmående",
     level: "Nybörjare",
