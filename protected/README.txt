@@ -1,11 +1,11 @@
 Gated course files live here. They are NEVER served from /public directly —
 the /api/download route serves them only after verifying a PAID Stripe session.
 
-Filenames must match those in lib/offer.ts:
-  - 10MinMakeup40_MasterCourse.pdf   (main course)
-  - FaceSculpt_Ritual.pdf            (free bonus)
-  - LymphDetox_21Day.pdf             (free bonus)
-  - FaceLifting_Guide.pdf            (free bonus)
+Filenames must match those in lib/offer.ts (Swedish editions):
+  - 10MinMakeup40_Masterkurs_Svenska.pdf          (main course)
+  - FaceSculpt_AlltIEtt_Svenska.pdf               (free bonus)
+  - 21Dagars_LymfDetox_Svenska.pdf                (free bonus)
+  - Ansiktslyft_SkulpteraDittAnsikte_Svenska.pdf  (free bonus)
 
-Run `node scripts/make-placeholder-pdfs.mjs` to (re)generate placeholders,
-then replace them with the real PDFs using the same filenames.
+To replace an ebook, drop the new PDF here with the same filename (or update
+the matching `file` in lib/offer.ts), then commit + push.

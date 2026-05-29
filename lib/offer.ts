@@ -33,7 +33,7 @@ export const mainOffer: Product = {
     "Hela proffsguiden till att se yngre, fräschare och mer självsäker ut på 10 minuter. 9 djupgående lektioner, proffstips, do's & don'ts och checklistor.",
   priceOre: 1000, // 10 kr
   regularPriceOre: 39700, // 397 kr — sätt till ert verkliga ordinarie pris
-  file: "10MinMakeup40_MasterCourse.pdf",
+  file: "10MinMakeup40_Masterkurs_Svenska.pdf",
 };
 
 // Free bonuses that come bundled with the main offer (priceOre = 0). The
@@ -45,7 +45,7 @@ export const bonuses: Product[] = [
     blurb: "Daglig 5-minutersritual som lyfter och definierar ansiktet naturligt.",
     priceOre: 0,
     regularPriceOre: 19700, // värde 197 kr
-    file: "FaceSculpt_Ritual.pdf",
+    file: "FaceSculpt_AlltIEtt_Svenska.pdf",
   },
   {
     id: "lymph-detox",
@@ -53,7 +53,7 @@ export const bonuses: Product[] = [
     blurb: "Enkel daglig lymfmassage för mindre svullnad och en skarpare käklinje.",
     priceOre: 0,
     regularPriceOre: 24700, // värde 247 kr
-    file: "LymphDetox_21Day.pdf",
+    file: "21Dagars_LymfDetox_Svenska.pdf",
   },
   {
     id: "face-lifting",
@@ -61,7 +61,7 @@ export const bonuses: Product[] = [
     blurb: "Lyftande tekniker för panna, kinder och käke – helt utan nålar.",
     priceOre: 0,
     regularPriceOre: 19700, // värde 197 kr
-    file: "FaceLifting_Guide.pdf",
+    file: "Ansiktslyft_SkulpteraDittAnsikte_Svenska.pdf",
   },
 ];
 
