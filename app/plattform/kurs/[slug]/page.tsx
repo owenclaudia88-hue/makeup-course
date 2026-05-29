@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireSession } from "@/lib/auth";
 import { getCourse } from "@/lib/courses";
+import CourseCover from "../../../components/CourseCover";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,11 @@ export default function CoursePage({ params }: { params: { slug: string } }) {
       <Link href="/plattform" className="text-sm font-medium text-rose hover:text-rose-dark">
         ← Alla kurser
       </Link>
+      <CourseCover
+        slug={course.slug}
+        title={course.title}
+        className="mt-4 aspect-[16/6] w-full rounded-2xl"
+      />
       <p className="eyebrow mb-2 mt-4">
         {course.category} · {course.level} · {course.minutesPerDay} min/dag
       </p>

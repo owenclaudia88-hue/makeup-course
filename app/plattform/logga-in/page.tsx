@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { brand, membership, formatKr } from "@/lib/offer";
@@ -12,6 +12,14 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Prefill from the /tack link: ?ny=1 opens signup, &email= fills the address.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    if (q.get("ny")) setMode("signup");
+    const e = q.get("email");
+    if (e) setEmail(e);
+  }, []);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();

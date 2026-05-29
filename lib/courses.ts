@@ -17,9 +17,188 @@ export type Course = {
   minutesPerDay: number;
   summary: string;
   lessons: Lesson[];
+  // true = part of the paid bundle the buyer gets immediately ("Dina kurser").
+  core?: boolean;
 };
 
+/** Cover image path for a course (drop <slug>.jpg into public/kurser/). */
+export function coverFor(slug: string): string {
+  return `/kurser/${slug}.jpg`;
+}
+
 export const courses: Course[] = [
+  {
+    slug: "makeup40",
+    title: "10 Min Makeup 40+ – Mästarkursen",
+    category: "Mästarkurs",
+    level: "Nybörjare",
+    minutesPerDay: 10,
+    core: true,
+    summary:
+      "Hela proffsguiden till att se yngre, fräschare och mer självsäker ut på 10 minuter. 9 lektioner med tekniker, do's & don'ts och en komplett rutin.",
+    lessons: [
+      {
+        title: "Varför smink åldrar dig",
+        insight: "Samma 5 misstag lägger på år – och mer produkt gör det nästan alltid värre.",
+        body:
+          "Tung foundation, kraftig undre eyeliner, slopad primer, fel concealer och helmatt finish får moget hud att se äldre ut. Korrigeringen är oftast att ta bort, inte lägga till.",
+        checklist: ["Jag känner igen de 5 åldrande misstagen", "Jag förstår varför mindre produkt är bättre"],
+      },
+      {
+        title: "Hudprep: grunden för varje look",
+        insight: "Prep är 60 % av resultatet – foundation på oförberedd hud sitter sämre.",
+        body: "Två minuters prep gör att allt annat sitter i timmar istället för att lägga sig i linjerna.",
+        steps: ["Lättviktig, återfuktande kräm", "Klappa in ögonkräm", "Lysande primer i T-zonen"],
+      },
+      {
+        title: "Foundation utan att kaka sig",
+        insight: "Satin/dewy finish + fuktad svamp = jämn hud utan att framhäva linjer.",
+        body: "Bygg tunt från mitten och utåt, lägg bara mer där det behövs. De flesta överdoserar.",
+        steps: ["Välj satin/dewy, lätt täckning", "Applicera med fuktad svamp, tryck – dra inte", "Andra lagret bara på rodnad"],
+      },
+      {
+        title: "Concealer-mästarklass",
+        insight: "Omvänd triangel under ögat lyfter blicken och döljer mörka ringar.",
+        body: "Färgkorrigera djupa ringar med persika/orange, matcha sedan hudtonen och sätt mycket lätt.",
+        steps: ["Färgkorrigera vid behov", "Rita en omvänd triangel, inte en linje", "Stippla ut, pudra minimalt"],
+      },
+      {
+        title: "Eye-lift utan tung eyeliner",
+        insight: "Liner bara på övre fransraden + en mörk yttre V lyfter ögat.",
+        body: "Undvik kraftig undre linje som drar ögat nedåt. Highlight i inre ögonvrån öppnar blicken.",
+        steps: ["Liner nära övre fransraden", "Varm skugga på locket, mörkare i yttre V", "Highlight i inre ögonvrån"],
+      },
+      {
+        title: "Bryn som ramar in & föryngrar",
+        insight: "Mjuka, naturligt fyllda bryn är den snabbaste föryngringen.",
+        body: "Fyll bara glesa partier, en nyans ljusare än håret, och sätt uppåt med gel.",
+        checklist: ["Mjuk penna, inte vaxig", "En nyans ljusare än håret", "Borstad uppåt och fixerad"],
+      },
+      {
+        title: "Rouge, bronzer & highlight för 40+",
+        insight: "Placera färg uppåt och framåt – aldrig nedåt.",
+        body: "Krämrouge på kindernas äpplen, blandad mot tinningen. Highlight på kindben, inte i hela ansiktet.",
+        steps: ["Krämrouge uppåt mot tinningen", "Matt bronzer där solen träffar", "Highlight: kindben, inre ögonvrår, amorbåge"],
+      },
+      {
+        title: "Läppar som inte blöder eller plattas till",
+        insight: "Liner är det viktigaste läppsteget efter 40.",
+        body: "Fyll hela läppen med liner före läppstift – det förhindrar att färgen blöder ut och ger volym.",
+        steps: ["Fyll läppen med liner", "Satin- eller krämläppstift", "En droppe gloss i mitten för fyllighet"],
+      },
+      {
+        title: "Din kompletta 10-minutersrutin",
+        insight: "Samma optimerade ordning varje dag ger ett proffsresultat på 10 minuter.",
+        body: "Sätt ihop allt – prep, foundation, concealer, bryn, ögon, kinder, highlight, läppar, kontroll i dagsljus.",
+        checklist: ["Jag kan hela rutinen i rätt ordning", "Jag klarar looken på 10 minuter", "Jag kollar alltid i dagsljus till sist"],
+      },
+    ],
+  },
+  {
+    slug: "face-sculpt",
+    title: "Face Sculpt: Allt-i-ett-ritual för ett yngre ansikte",
+    category: "Bonus",
+    level: "Nybörjare",
+    minutesPerDay: 5,
+    core: true,
+    summary:
+      "En daglig 5-minutersritual som lyfter, definierar och ger lyster – med händer och enkla verktyg, helt utan nålar.",
+    lessons: [
+      {
+        title: "Ritualens grund",
+        insight: "Konsekvens slår intensitet – fem minuter dagligen ger synlig skillnad.",
+        body:
+          "Ritualen kombinerar lätt massage, lyftande grepp och avslappning av spända muskler. Använd en ansiktsolja så att händer eller verktyg glider mjukt.",
+      },
+      {
+        title: "Lyft & definiera",
+        insight: "Arbeta alltid uppåt och utåt längs ansiktets naturliga linjer.",
+        body: "Dessa grepp aktiverar och lyfter de muskler som bär upp kinder och käklinje.",
+        steps: [
+          "Knogmassage längs käken, från hakan mot örat × 10",
+          "Lyftande strykningar över kinderna mot tinningen",
+          "Tryck och släpp längs ögonbrynsbågen",
+        ],
+      },
+      {
+        title: "Avslappning & lyster",
+        insight: "Att släppa spänning gör lika mycket som att lyfta.",
+        body:
+          "Avsluta med att mjuka upp käke, panna och tinningar. Mindre spänning = slätare uttryck och bättre cirkulation, vilket ger naturlig lyster.",
+        checklist: ["Jag gör ritualen dagligen", "Jag arbetar uppåt och utåt", "Jag avslutar med att slappna av käke och panna"],
+      },
+    ],
+  },
+  {
+    slug: "lymfdetox-21",
+    title: "21-dagars Lymfdetox: Smalare ansikte & kropp",
+    category: "Bonus",
+    level: "Nybörjare",
+    minutesPerDay: 10,
+    core: true,
+    summary:
+      "Ett 21-dagars program med daglig lymfmassage och enkla vanor för mindre svullnad, en skarpare kontur och en lättare kropp.",
+    lessons: [
+      {
+        title: "Så fungerar programmet",
+        insight: "21 dagar bygger en vana – och vätskan minskar märkbart längs vägen.",
+        body:
+          "Varje dag gör du en kort lymfrutin för ansikte och kropp plus en stödjande vana (vatten, rörelse, andning). Små steg, varje dag.",
+      },
+      {
+        title: "Daglig lymfrutin",
+        insight: "Lätt tryck mot lymfknutorna – aldrig hårt.",
+        body: "Samma sekvens varje dag tömmer vätska från ansikte, hals och kropp.",
+        steps: [
+          "Pumpa lätt vid nyckelbenen × 10",
+          "Stryk ansiktet inifrån och ut mot öronen",
+          "Borsta kroppen mot hjärtat (torrborste eller händer)",
+        ],
+      },
+      {
+        title: "Vanorna som förstärker",
+        insight: "Lymfan rör sig av vatten, rörelse och andning.",
+        body:
+          "Komplettera massagen med tillräckligt vatten, dagliga promenader och några djupa andetag. Tillsammans ger de störst effekt på 21 dagar.",
+        checklist: ["Jag gör lymfrutinen dagligen", "Jag dricker tillräckligt med vatten", "Jag rör på mig varje dag"],
+      },
+    ],
+  },
+  {
+    slug: "ansiktslyft",
+    title: "Face Lifting: Forma ansiktet & se yngre ut",
+    category: "Bonus",
+    level: "Nybörjare",
+    minutesPerDay: 8,
+    core: true,
+    summary:
+      "Lyftande övningar för panna, kinder och käke som stärker musklerna och ger ett naturligt, mer ungdomligt ansikte – utan nålar.",
+    lessons: [
+      {
+        title: "Varför muskelträning lyfter ansiktet",
+        insight: "Starka ansiktsmuskler bär upp huden – precis som i kroppen.",
+        body:
+          "När musklerna under huden tappar spänst sjunker dragen. Riktad träning stärker dem igen och ger ett synligt lyft över tid.",
+      },
+      {
+        title: "Lyftövningar steg för steg",
+        insight: "Kontrollerade, isolerade rörelser – inte att dra i huden.",
+        body: "Aktivera kind-, käk- och pannmuskler var för sig för bäst effekt.",
+        steps: [
+          "Kindlyft: le med stängd mun, tryck lätt uppåt på kindbenen, håll 5 sek × 10",
+          "Käklinje: skjut fram underkäken lätt, håll 5 sek × 10",
+          "Panna: håll brynen nere med fingrarna och höj dem mot motståndet × 10",
+        ],
+      },
+      {
+        title: "Rutin & resultat",
+        insight: "Några minuter dagligen i några veckor ger synlig skillnad.",
+        body:
+          "Gör övningarna dagligen och var tålmodig – som all muskelträning syns resultatet med regelbundenhet, inte enstaka pass.",
+        checklist: ["Jag gör övningarna dagligen", "Jag arbetar musklerna utan att dra i huden", "Jag ger det några veckor"],
+      },
+    ],
+  },
   {
     slug: "ansiktsyoga",
     title: "Ansiktsyoga: Lyft ansiktet på 10 minuter",
