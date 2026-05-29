@@ -267,6 +267,320 @@ export const courses: Course[] = [
       },
     ],
   },
+  {
+    slug: "lymfdranage",
+    title: "Lymfdränage hemma: mindre svullnad",
+    category: "Skönhet",
+    level: "Nybörjare",
+    minutesPerDay: 8,
+    summary:
+      "Daglig lymfmassage som tömmer vätska, minskar svullnad och ger en skarpare ansikts- och käklinje.",
+    lessons: [
+      {
+        title: "Vad lymfsystemet gör",
+        insight: "Lymfan transporterar bort vätska och slagg – men har ingen egen pump.",
+        body:
+          "Till skillnad från blodet rör sig lymfan bara när du rör dig eller masserar den. Stillasittande och sömnbrist gör att vätska samlas, vilket syns som svullnad och påsar.",
+      },
+      {
+        title: "Ansiktsdränage steg för steg",
+        insight: "Alltid lätt tryck, alltid i riktning mot lymfknutorna.",
+        body: "Mjuka, strykande rörelser tömmer vätskan – tryck aldrig hårt.",
+        steps: [
+          "Börja vid nyckelbenen, pumpa lätt × 10",
+          "Stryk från hakan längs käken mot öronen",
+          "Från näsvingarna utåt över kinderna",
+          "Lätt runt ögonen med ringfingret, utåt",
+        ],
+      },
+      {
+        title: "Kropp och dagliga vanor",
+        insight: "Rörelse och vatten är din lymfas bästa vänner.",
+        body:
+          "Korta promenader, djupandning och tillräckligt med vatten håller lymfan i rörelse hela dagen.",
+        checklist: ["Jag gör ansiktsdränage på morgonen", "Jag rör på mig regelbundet", "Jag dricker tillräckligt med vatten"],
+      },
+    ],
+  },
+  {
+    slug: "harvard-moget-har",
+    title: "Hårvård & volym för moget hår",
+    category: "Skönhet",
+    level: "Nybörjare",
+    minutesPerDay: 5,
+    summary: "Ge tunnare, moget hår mer volym, lyster och styrka med rätt rutiner och produkter.",
+    lessons: [
+      {
+        title: "Hur håret förändras",
+        insight: "Efter klimakteriet blir håret ofta tunnare och torrare.",
+        body:
+          "Lägre östrogen ger finare hårstrån och långsammare växt. Fokus blir att skydda, ge volym vid rötterna och undvika det som tynger ner.",
+      },
+      {
+        title: "Tvätt och volym",
+        insight: "Tvätta rätt, inte ofta – och bygg volym vid roten.",
+        body: "Rätt teknik ger lyft utan att håret blir platt eller flottigt.",
+        steps: [
+          "Använd ett milt, volymgivande schampo",
+          "Balsam bara på längderna, inte rötterna",
+          "Föna med huvudet nedåt för lyft vid roten",
+        ],
+      },
+      {
+        title: "Skydd och styrka",
+        insight: "Värme och hårda kemikalier åldrar håret snabbast.",
+        body:
+          "Använd värmeskydd, undvik för hög värme och klipp topparna regelbundet. En droppe hårolja på topparna ger lyster utan att tynga.",
+        checklist: ["Jag använder värmeskydd", "Jag undviker att tvätta håret för ofta", "Jag klipper topparna regelbundet"],
+      },
+    ],
+  },
+  {
+    slug: "andning-angest",
+    title: "Andningsövningar för ångest",
+    category: "Välmående",
+    level: "Nybörjare",
+    minutesPerDay: 8,
+    summary:
+      "Enkla andningstekniker som lugnar nervsystemet och dämpar ångest – var som helst, på några minuter.",
+    lessons: [
+      {
+        title: "Varför andning hjälper",
+        insight: "Långsam andning är snabbaste vägen att signalera lugn till hjärnan.",
+        body:
+          "Vid ångest andas vi ytligt och snabbt. Genom att medvetet sakta ner andningen aktiverar du det parasympatiska nervsystemet – kroppens broms.",
+      },
+      {
+        title: "Box breathing",
+        insight: "Fyrkantsandning ger sinnet något att fokusera på.",
+        body: "En enkel, balanserad rytm som snabbt sänker oron.",
+        steps: ["Andas in 4 sek", "Håll 4 sek", "Andas ut 4 sek", "Håll 4 sek – upprepa 4 varv"],
+      },
+      {
+        title: "Förlängd utandning",
+        insight: "Utandningen är där lugnet sitter.",
+        body:
+          "Gör utandningen längre än inandningen, t.ex. in 4 / ut 6. Bara någon minut sänker puls och oro.",
+        checklist: ["Jag kan box breathing", "Jag använder förlängd utandning vid oro", "Jag övar någon minut dagligen"],
+      },
+    ],
+  },
+  {
+    slug: "hallning-rorlighet",
+    title: "Hållning & rörlighet på 10 minuter",
+    category: "Hälsa",
+    level: "Nybörjare",
+    minutesPerDay: 10,
+    summary:
+      "Motverka stelhet och skärmhållning med korta dagliga rörelser som öppnar kroppen och minskar värk.",
+    lessons: [
+      {
+        title: "Vad stillasittande gör",
+        insight: "Kroppen formas efter de positioner du håller mest.",
+        body:
+          "Långa stunder framför skärm ger framåtlutat huvud, runda axlar och stel rygg. Korta, ofta upprepade rörelser motverkar det bättre än ett långt pass.",
+      },
+      {
+        title: "Tre öppnande rörelser",
+        insight: "Öppna det som sittandet stänger: bröst, höfter, rygg.",
+        body: "Gör dem långsamt och andas ut i varje stretch.",
+        steps: [
+          "Bröstöppning: knäpp händerna bakom ryggen, lyft lätt",
+          "Höftböj: utfall, skjut höften framåt",
+          "Rotation: sitt rakt och vrid överkroppen sida till sida",
+        ],
+      },
+      {
+        title: "Rörelsepauser",
+        insight: "Res dig varje timme – kroppen mår av variation.",
+        body:
+          "Sätt en påminnelse att resa dig och röra dig en minut varje timme. Det håller leder och muskler vid liv och förbättrar fokus.",
+        checklist: ["Jag reser mig minst en gång i timmen", "Jag gör öppnande rörelser dagligen", "Jag tänker på huvudets position vid skärmen"],
+      },
+    ],
+  },
+  {
+    slug: "personlig-stil-40",
+    title: "Personlig stil & garderob 40+",
+    category: "Stil",
+    level: "Medel",
+    minutesPerDay: 10,
+    summary:
+      "Hitta en stil som känns som du och som lyfter dig – bygg en enkel, fungerande garderob för livet efter 40.",
+    lessons: [
+      {
+        title: "Stil börjar med passform",
+        insight: "Välsittande basplagg slår dyra trendplagg varje gång.",
+        body:
+          "Efter 40 förändras kroppen, och plagg som sitter rätt får dig att se mer samlad och självsäker ut – oavsett storlek.",
+      },
+      {
+        title: "Bygg en kapsel-garderob",
+        insight: "Färre plagg som funkar ihop = fler outfits, mindre stress.",
+        body: "En genomtänkt bas gör att allt matchar och morgonen blir enklare.",
+        steps: ["Välj 2–3 neutrala basfärger", "Investera i välsittande basplagg", "Lägg till några accentplagg och accessoarer"],
+      },
+      {
+        title: "Klä för dig",
+        insight: "Regler är riktlinjer – din komfort vinner.",
+        body:
+          "Bär det som får dig att känna dig bekväm och stark. Trygghet i kläderna syns mer än något trendplagg.",
+        checklist: ["Mina basplagg sitter bra", "Min garderob har en sammanhållen färgpalett", "Jag bär det jag känner mig trygg i"],
+      },
+    ],
+  },
+  {
+    slug: "mindful-eating",
+    title: "Mindful eating & hälsosamma vanor",
+    category: "Hälsa",
+    level: "Nybörjare",
+    minutesPerDay: 10,
+    summary: "Bygg ett lugnare, hälsosammare förhållande till mat – utan dieter, regler eller skuld.",
+    lessons: [
+      {
+        title: "Mindful vs mindless",
+        insight: "Det är inte bara vad du äter, utan hur.",
+        body:
+          "Att äta framför skärmen eller i stress gör att vi missar mättnadssignaler och äter mer. Närvaro vid måltiden förändrar både mängd och njutning.",
+      },
+      {
+        title: "Praktisk mindful eating",
+        insight: "Sakta ner – magen hinner inte med en snabb hjärna.",
+        body: "Små förändringar vid bordet gör störst skillnad.",
+        steps: ["Ät utan skärm", "Lägg ner besticket mellan tuggorna", "Stanna upp halvvägs och känn efter hur hungrig du är"],
+      },
+      {
+        title: "Hållbara vanor",
+        insight: "Små, hållbara byten slår snabba dieter.",
+        body:
+          "Lägg till mer av det goda (grönt, protein, vatten) istället för att förbjuda. Vanor som känns lätta håller i längden.",
+        checklist: ["Jag äter minst en måltid utan skärm", "Jag lägger till grönt på tallriken", "Jag dömer inte mig själv för enskilda måltider"],
+      },
+    ],
+  },
+  {
+    slug: "meditation-nyborjare",
+    title: "Meditation för nybörjare",
+    category: "Välmående",
+    level: "Nybörjare",
+    minutesPerDay: 10,
+    summary: "Kom igång med meditation från noll – korta, enkla pass som minskar stress och ökar fokus.",
+    lessons: [
+      {
+        title: "Myter om meditation",
+        insight: "Målet är inte att 'tömma hjärnan' – det är att märka och återvända.",
+        body:
+          "Tankar kommer alltid. Meditation är att lägga märke till att du vandrat iväg och vänligt komma tillbaka till andningen. Varje återvändning är träning för fokus.",
+      },
+      {
+        title: "Ditt första pass",
+        insight: "Två minuter dagligen slår tjugo minuter ibland.",
+        body: "Enkelhet vinner – börja så litet att det känns nästan löjligt lätt.",
+        steps: ["Sitt bekvämt, blunda", "Följ andningen in och ut", "När tankar kommer – notera och återvänd", "Börja med 2–5 minuter"],
+      },
+      {
+        title: "Gör det till en vana",
+        insight: "Koppla meditationen till något du redan gör.",
+        body:
+          "Meditera direkt efter morgonkaffet eller före sänggåendet. Att fästa vanan vid en befintlig rutin gör den lätt att hålla.",
+        checklist: ["Jag har en fast tid att meditera", "Jag dömer inte vandrande tankar", "Jag har börjat litet och realistiskt"],
+      },
+    ],
+  },
+  {
+    slug: "digital-detox",
+    title: "Digital detox & fokus",
+    category: "Personlig utveckling",
+    level: "Nybörjare",
+    minutesPerDay: 10,
+    summary: "Ta tillbaka fokus och lugn från skärmen med enkla gränser som faktiskt håller.",
+    lessons: [
+      {
+        title: "Hur skärmen kapar fokus",
+        insight: "Varje notis återställer din uppmärksamhet – det tar minuter att komma tillbaka.",
+        body:
+          "Ständiga avbrott gör djupt fokus omöjligt och höjer stress. Problemet är sällan viljestyrka, utan en miljö byggd för att fånga din uppmärksamhet.",
+      },
+      {
+        title: "Sätt gränser",
+        insight: "Gör det jobbigt att fastna, lätt att fokusera.",
+        body: "Designa miljön så att det rätta valet blir det enkla.",
+        steps: ["Stäng av onödiga notiser", "Lägg telefonen utom synhåll vid fokus", "Inför skärmfria zoner (sängen, matbordet)"],
+      },
+      {
+        title: "Fyll tomrummet",
+        insight: "Detox funkar bara om något bättre tar platsen.",
+        body:
+          "Ersätt scrollandet med något du mår bra av: en promenad, en bok, en kontakt. Annars dras du snabbt tillbaka.",
+        checklist: ["Jag har stängt av onödiga notiser", "Jag har minst en skärmfri zon", "Jag har en ersättningsvana för scrollandet"],
+      },
+    ],
+  },
+  {
+    slug: "naglar-hander",
+    title: "Vackra naglar & händer",
+    category: "Skönhet",
+    level: "Nybörjare",
+    minutesPerDay: 5,
+    summary:
+      "Vårda händer och naglar så de ser unga och välvårdade ut – ofta det som avslöjar ålder mest.",
+    lessons: [
+      {
+        title: "Varför händerna åldras",
+        insight: "Händerna har tunn hud och mest solexponering – men minst omvårdnad.",
+        body:
+          "Torrhet, pigmentfläckar och sköra naglar kommer av sol, vatten och kemikalier. Lite daglig omsorg gör stor skillnad.",
+      },
+      {
+        title: "Daglig handvård",
+        insight: "Fukt + SPF på händerna, precis som ansiktet.",
+        body: "De enkla stegen som håller händerna mjuka och jämna i ton.",
+        steps: ["Handkräm efter varje handtvätt", "SPF på handryggarna på dagen", "Nagelolja på nagelband några gånger i veckan"],
+      },
+      {
+        title: "Starkare naglar",
+        insight: "Naglar bryts oftast av uttorkning, inte näringsbrist.",
+        body:
+          "Använd handskar vid disk och städ, undvik aceton och håll naglarna lagom korta. Fukt är nyckeln.",
+        checklist: ["Jag använder handkräm dagligen", "Jag skyddar händerna vid disk/städ", "Jag oljar nagelbanden regelbundet"],
+      },
+    ],
+  },
+  {
+    slug: "anti-age-kost",
+    title: "Anti-age på tallriken: kost för huden",
+    category: "Hälsa",
+    level: "Medel",
+    minutesPerDay: 10,
+    summary:
+      "Ät för hud som åldras vackert – enkla kostval som stödjer kollagen, fukt och lyster inifrån.",
+    lessons: [
+      {
+        title: "Huden börjar i tallriken",
+        insight: "Ingen kräm ersätter vad du äter.",
+        body:
+          "Socker och hårt processad mat bryter ner kollagen, medan protein, goda fetter och färgglada grönsaker bygger upp huden inifrån.",
+      },
+      {
+        title: "Hudens bästa mat",
+        insight: "Färg, protein och omega-3 är hudens byggstenar.",
+        body: "Fyll tallriken med det som faktiskt stödjer huden.",
+        steps: [
+          "Protein vid varje måltid (kollagenets byggstenar)",
+          "Omega-3: fet fisk, valnötter, linfrö",
+          "Färgglada grönsaker och bär (antioxidanter)",
+          "Vatten för fukt",
+        ],
+      },
+      {
+        title: "Mindre av det som åldrar",
+        insight: "Du behöver inte vara perfekt – bara minska topparna.",
+        body:
+          "Dra ner på tillsatt socker, alkohol och starkt processad mat. Det syns på huden inom några veckor.",
+        checklist: ["Jag får protein vid varje måltid", "Jag äter omega-3 regelbundet", "Jag har minskat tillsatt socker"],
+      },
+    ],
+  },
 ];
 
 export function getCourse(slug: string): Course | undefined {
