@@ -47,6 +47,25 @@ export default async function CoursePage({ params }: { params: { slug: string } 
             Hantera medlemskap
           </Link>
         </div>
+      ) : course.pdf ? (
+        <div className="mt-6">
+          <iframe
+            src={`/api/kurs-pdf?slug=${course.slug}`}
+            title={course.title}
+            className="h-[85vh] w-full rounded-2xl border border-blush bg-white"
+          />
+          <p className="mt-2 text-center text-xs text-muted">
+            Ser du inget?{" "}
+            <a
+              href={`/api/kurs-pdf?slug=${course.slug}`}
+              target="_blank"
+              rel="noreferrer"
+              className="text-rose hover:text-rose-dark"
+            >
+              Öppna PDF i ny flik
+            </a>
+          </p>
+        </div>
       ) : (
         <div className="mt-8 space-y-5">
           {course.lessons.map((l, i) => (

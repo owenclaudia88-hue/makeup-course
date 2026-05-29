@@ -7,6 +7,7 @@ const nextConfig = {
   experimental: {
     outputFileTracingIncludes: {
       "/api/download": ["./protected/**"],
+      "/api/kurs-pdf": ["./protected/**"],
     },
   },
 };

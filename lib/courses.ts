@@ -19,6 +19,9 @@ export type Course = {
   lessons: Lesson[];
   // true = part of the paid bundle the buyer gets immediately ("Dina kurser").
   core?: boolean;
+  // Filename in /protected. When set, the course is shown as the full PDF in an
+  // embedded reader instead of the text lessons.
+  pdf?: string;
 };
 
 /** Cover image path for a course (drop <slug>.webp into public/kurser/). */
@@ -29,6 +32,7 @@ export function coverFor(slug: string): string {
 export const courses: Course[] = [
   {
     slug: "makeup40",
+    pdf: "10MinMakeup40_Masterkurs_Svenska.pdf",
     title: "10 Min Makeup 40+ – Mästarkursen",
     category: "Mästarkurs",
     level: "Nybörjare",
@@ -96,6 +100,7 @@ export const courses: Course[] = [
   },
   {
     slug: "face-sculpt",
+    pdf: "FaceSculpt_AlltIEtt_Svenska.pdf",
     title: "Face Sculpt: Allt-i-ett-ritual för ett yngre ansikte",
     category: "Bonus",
     level: "Nybörjare",
@@ -131,6 +136,7 @@ export const courses: Course[] = [
   },
   {
     slug: "lymfdetox-21",
+    pdf: "21Dagars_LymfDetox_Svenska.pdf",
     title: "21-dagars Lymfdetox: Smalare ansikte & kropp",
     category: "Bonus",
     level: "Nybörjare",
@@ -166,6 +172,7 @@ export const courses: Course[] = [
   },
   {
     slug: "ansiktslyft",
+    pdf: "Ansiktslyft_SkulpteraDittAnsikte_Svenska.pdf",
     title: "Face Lifting: Forma ansiktet & se yngre ut",
     category: "Bonus",
     level: "Nybörjare",
