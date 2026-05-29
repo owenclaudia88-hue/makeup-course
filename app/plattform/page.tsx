@@ -1,18 +1,26 @@
 import Link from "next/link";
 import { requireSession } from "@/lib/auth";
 import { courses, type Course } from "@/lib/courses";
+import { hasActiveMembership } from "@/lib/access";
 import { brand, membership } from "@/lib/offer";
 import CourseCover from "../components/CourseCover";
 
 export const dynamic = "force-dynamic";
 
-function CourseCard({ c }: { c: Course }) {
-  return (
-    <Link
-      href={`/plattform/kurs/${c.slug}`}
-      className="card group flex flex-col overflow-hidden p-0 transition hover:border-rose"
-    >
-      <CourseCover slug={c.slug} title={c.title} className="aspect-[16/10] w-full" />
+function CourseCard({ c, locked }: { c: Course; locked?: boolean }) {
+  const cls = "card group flex flex-col overflow-hidden p-0 transition hover:border-rose";
+  const inner = (
+    <>
+      <div className="relative">
+        <CourseCover slug={c.slug} title={c.title} className="aspect-[16/10] w-full" />
+        {locked && (
+          <div className="absolute inset-0 flex items-center justify-center bg-ink/55">
+            <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-ink">
+              🔒 Lås upp med medlemskap
+            </span>
+          </div>
+        )}
+      </div>
       <div className="flex grow flex-col p-5">
         <span className="text-xs font-semibold uppercase tracking-wide text-rose">{c.category}</span>
         <h3 className="mt-2 font-serif text-lg font-bold text-ink">{c.title}</h3>
@@ -21,12 +29,18 @@ function CourseCard({ c }: { c: Course }) {
           {c.lessons.length} lektioner · {c.minutesPerDay} min/dag
         </span>
       </div>
+    </>
+  );
+  return (
+    <Link href={locked ? "/plattform/konto" : `/plattform/kurs/${c.slug}`} className={cls}>
+      {inner}
     </Link>
   );
 }
 
-export default function CatalogPage() {
-  requireSession();
+export default async function CatalogPage() {
+  const session = requireSession();
+  const member = await hasActiveMembership(session.email);
   const core = courses.filter((c) => c.core);
   const rest = courses.filter((c) => !c.core);
 
@@ -35,7 +49,7 @@ export default function CatalogPage() {
       <p className="eyebrow mb-2">{brand.name} Akademi</p>
       <h1 className="font-serif text-3xl font-bold text-ink sm:text-4xl">Dina kurser</h1>
       <p className="mt-1 text-muted">
-        Allt du köpt finns här att titta på direkt – plus allt som ingår i ditt medlemskap.
+        Kurserna du köpt är dina för alltid – resten ingår så länge ditt medlemskap är aktivt.
       </p>
 
       {core.length > 0 && (
@@ -49,13 +63,22 @@ export default function CatalogPage() {
         </>
       )}
 
-      <h2 className="mt-12 font-serif text-xl font-bold text-ink">Mer i ditt medlemskap</h2>
+      <div className="mt-12 flex flex-wrap items-center justify-between gap-3">
+        <h2 className="font-serif text-xl font-bold text-ink">Mer i ditt medlemskap</h2>
+        {!member && (
+          <Link href="/plattform/konto" className="text-sm font-semibold text-rose hover:text-rose-dark">
+            Återaktivera →
+          </Link>
+        )}
+      </div>
       <p className="text-sm text-muted">
-        {membership.courses}+ kurser ingår i {membership.name}.
+        {member
+          ? `${membership.courses}+ kurser ingår i ${membership.name}.`
+          : "Ditt medlemskap är inte aktivt – återaktivera för att låsa upp dessa kurser."}
       </p>
       <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {rest.map((c) => (
-          <CourseCard key={c.slug} c={c} />
+          <CourseCard key={c.slug} c={c} locked={!member} />
         ))}
       </div>
     </main>

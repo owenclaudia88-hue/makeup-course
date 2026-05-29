@@ -19,7 +19,12 @@ export default function PlatformLayout({ children }: { children: React.ReactNode
           <nav className="flex items-center gap-4 text-sm">
             {session ? (
               <>
-                <span className="hidden text-muted sm:inline">{session.email}</span>
+                <Link
+                  href="/plattform/konto"
+                  className="font-semibold text-ink hover:text-rose"
+                >
+                  Mitt medlemskap
+                </Link>
                 <a href="/api/auth/logout" className="font-semibold text-rose hover:text-rose-dark">
                   Logga ut
                 </a>

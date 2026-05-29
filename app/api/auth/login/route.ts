@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getRedis, getUser } from "@/lib/db";
 import { verifyPassword, createSessionToken, SESSION_COOKIE, SESSION_MAX_AGE } from "@/lib/auth";
-import { findActiveSubscription } from "@/lib/access";
 
 export const runtime = "nodejs";
 
@@ -38,14 +37,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Fel e-post eller lösenord." }, { status: 401 });
   }
 
-  // Re-check the membership is still active before letting them back in.
-  const sub = await findActiveSubscription(email);
-  if (!sub.active) {
-    return NextResponse.json(
-      { error: "Ditt medlemskap verkar inte vara aktivt längre. Kontakta support om detta är fel." },
-      { status: 403 }
-    );
-  }
+  // Having an account = they bought the bundle, so they always keep access to
+  // their purchased (core) courses. Membership-only courses are gated per page
+  // on the live subscription status, so no subscription check here.
 
   const res = NextResponse.json({ ok: true });
   res.cookies.set(SESSION_COOKIE, createSessionToken(email), cookieOpts);
