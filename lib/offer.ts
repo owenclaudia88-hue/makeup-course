@@ -76,8 +76,9 @@ export const membership = {
   courses: 206,
   // Stripe Price is created once via the API using this lookup_key, then reused.
   lookupKey: "lumora_membership_monthly_sek",
-  // Where members are sent to access the platform (set the real URL in env).
-  platformUrl: process.env.NEXT_PUBLIC_LUMORA_PLATFORM_URL || "https://newmindstart.com",
+  // Where members are sent to access the platform. Defaults to the built-in
+  // Luumora Akademi; override with an env var only if you host it elsewhere.
+  platformUrl: process.env.NEXT_PUBLIC_LUMORA_PLATFORM_URL || "/plattform/logga-in",
 };
 
 export const allProducts: Product[] = [mainOffer, ...bonuses];
