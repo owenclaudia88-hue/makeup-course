@@ -22,6 +22,9 @@ export type Course = {
   // Filename in /protected. When set, the course is shown as the full PDF in an
   // embedded reader instead of the text lessons.
   pdf?: string;
+  // Bunny Stream video lessons. When set (and Bunny is configured), the course
+  // is shown as a video player + lesson list. Takes priority over pdf/lessons.
+  videoLessons?: { title: string; videoId: string }[];
 };
 
 /** Cover image path for a course (drop <slug>.webp into public/kurser/). */

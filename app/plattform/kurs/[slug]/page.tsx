@@ -3,8 +3,10 @@ import { notFound } from "next/navigation";
 import { requireSession } from "@/lib/auth";
 import { getCourse } from "@/lib/courses";
 import { hasActiveMembership } from "@/lib/access";
+import { bunnyEmbedUrl } from "@/lib/bunny";
 import { membership } from "@/lib/offer";
 import CourseCover from "../../../components/CourseCover";
+import VideoCourse from "../../../components/VideoCourse";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +18,19 @@ export default async function CoursePage({ params }: { params: { slug: string } 
   // Core (purchased) courses are always accessible; membership courses require
   // a live subscription.
   const locked = !course.core && !(await hasActiveMembership(session.email));
+
+  const videoLessons = (course.videoLessons ?? []).map((l) => ({
+    title: l.title,
+    url: bunnyEmbedUrl(l.videoId),
+  }));
+  const hasVideo = videoLessons.length > 0;
+  const playable = videoLessons.filter((l) => l.url) as { title: string; url: string }[];
+
+  let mode: "locked" | "video" | "video-pending" | "pdf" | "lessons";
+  if (locked) mode = "locked";
+  else if (hasVideo) mode = playable.length === videoLessons.length ? "video" : "video-pending";
+  else if (course.pdf) mode = "pdf";
+  else mode = "lessons";
 
   return (
     <main className="container-narrow py-10">
@@ -33,7 +48,7 @@ export default async function CoursePage({ params }: { params: { slug: string } 
       <h1 className="font-serif text-3xl font-bold text-ink sm:text-4xl">{course.title}</h1>
       <p className="mt-2 text-muted">{course.summary}</p>
 
-      {locked ? (
+      {mode === "locked" && (
         <div className="card mt-8 p-8 text-center">
           <p className="text-2xl">🔒</p>
           <p className="mt-2 text-lg font-semibold text-ink">
@@ -47,7 +62,18 @@ export default async function CoursePage({ params }: { params: { slug: string } 
             Hantera medlemskap
           </Link>
         </div>
-      ) : course.pdf ? (
+      )}
+
+      {mode === "video" && <VideoCourse lessons={playable} />}
+
+      {mode === "video-pending" && (
+        <div className="card mt-8 p-8 text-center text-muted">
+          Videon konfigureras snart. (Bunny Stream är inte kopplat än – lägg in
+          BUNNY_LIBRARY_ID och BUNNY_TOKEN_KEY.)
+        </div>
+      )}
+
+      {mode === "pdf" && (
         <div className="mt-6">
           <iframe
             src={`/api/kurs-pdf?slug=${course.slug}`}
@@ -66,7 +92,9 @@ export default async function CoursePage({ params }: { params: { slug: string } 
             </a>
           </p>
         </div>
-      ) : (
+      )}
+
+      {mode === "lessons" && (
         <div className="mt-8 space-y-5">
           {course.lessons.map((l, i) => (
             <article key={i} className="card p-6">

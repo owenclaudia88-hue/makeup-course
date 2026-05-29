@@ -26,3 +26,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# course videos belong on Bunny Stream, never in the repo
+*.mp4
+*.mov
+*.webm
+*.mkv
+*.avi
+*.m4v
