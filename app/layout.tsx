@@ -18,16 +18,16 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://luumora.online"),
-  title: `${brand.name} – 10 Min Makeup 40+`,
+  title: `${brand.name} Academy — Daily rituals for a glowing life`,
   description:
-    "Se yngre, fräschare och mer självsäker ut på 10 minuter. Proffsguiden för dig över 40 – 9 lektioner, checklistor och en komplett 10-minutersrutin.",
+    "Bite-sized video courses for beauty, wellness, and personal growth. Face yoga, skincare, mindfulness, style, and more — 20+ courses, daily practice, real results.",
   robots: { index: true, follow: true },
   openGraph: {
-    title: `${brand.name} – 10 Min Makeup 40+`,
+    title: `${brand.name} Academy — Daily rituals for a glowing life`,
     description:
-      "Se 10 år yngre ut på 10 minuter om dagen. Proffsguiden för dig över 40.",
+      "Bite-sized video courses for beauty, wellness, and personal growth. 20+ courses, daily practice, real results.",
     images: ["/hero.jpg"],
-    locale: "sv_SE",
+    locale: "en_US",
     type: "website",
   },
 };
@@ -38,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="sv" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="font-sans antialiased">
         <MetaPixel />
         {children}

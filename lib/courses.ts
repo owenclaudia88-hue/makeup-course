@@ -33,7 +33,7 @@ export type Course = {
   slug: string;
   title: string;
   category: string;
-  level: "Nybörjare" | "Medel" | "Avancerad";
+  level: "Beginner" | "Intermediate" | "Advanced";
   minutesPerDay: number;
   summary: string;
   // Text lessons (used when there's no PDF or video).
@@ -63,8 +63,8 @@ export const courses: Course[] = [
     slug: "makeup40",
     pdf: "10MinMakeup40_Masterkurs_Svenska.pdf",
     title: "10 Min Makeup 40+ – Mästarkursen",
-    category: "Mästarkurs",
-    level: "Nybörjare",
+    category: "Masterclass",
+    level: "Beginner",
     minutesPerDay: 10,
     core: true,
     summary:
@@ -132,7 +132,7 @@ export const courses: Course[] = [
     pdf: "FaceSculpt_AlltIEtt_Svenska.pdf",
     title: "Face Sculpt: Allt-i-ett-ritual för ett yngre ansikte",
     category: "Bonus",
-    level: "Nybörjare",
+    level: "Beginner",
     minutesPerDay: 5,
     core: true,
     summary:
@@ -168,7 +168,7 @@ export const courses: Course[] = [
     pdf: "21Dagars_LymfDetox_Svenska.pdf",
     title: "21-dagars Lymfdetox: Smalare ansikte & kropp",
     category: "Bonus",
-    level: "Nybörjare",
+    level: "Beginner",
     minutesPerDay: 10,
     core: true,
     summary:
@@ -204,7 +204,7 @@ export const courses: Course[] = [
     pdf: "Ansiktslyft_SkulpteraDittAnsikte_Svenska.pdf",
     title: "Face Lifting: Forma ansiktet & se yngre ut",
     category: "Bonus",
-    level: "Nybörjare",
+    level: "Beginner",
     minutesPerDay: 8,
     core: true,
     summary:
@@ -239,7 +239,7 @@ export const courses: Course[] = [
     slug: "natural-face-lift",
     title: "Natural Face Lift: Ansiktsträning, massage & djup avslappning",
     category: "Bonus",
-    level: "Nybörjare",
+    level: "Beginner",
     minutesPerDay: 10,
     core: true,
     summary:
@@ -341,8 +341,8 @@ export const courses: Course[] = [
     slug: "ansiktsyoga",
     pdf: "ansiktsyoga.pdf",
     title: "Ansiktsyoga: Lyft ansiktet på 10 minuter",
-    category: "Skönhet",
-    level: "Nybörjare",
+    category: "Beauty",
+    level: "Beginner",
     minutesPerDay: 10,
     summary:
       "Enkla, dagliga ansiktsövningar som stärker musklerna, ökar cirkulationen och ger ett naturligt lyft – utan nålar eller dyra behandlingar.",
@@ -404,8 +404,8 @@ export const courses: Course[] = [
     slug: "hudvard-40",
     pdf: "hudvard-40.pdf",
     title: "Hudvård efter 40",
-    category: "Skönhet",
-    level: "Nybörjare",
+    category: "Beauty",
+    level: "Beginner",
     minutesPerDay: 5,
     summary:
       "Bygg en enkel, effektiv hudvårdsrutin anpassad för moget hud – rätt ingredienser i rätt ordning för fukt, lyster och färre linjer.",
@@ -442,8 +442,8 @@ export const courses: Course[] = [
     slug: "battre-somn",
     pdf: "battre-somn.pdf",
     title: "Bättre sömn: en kvällsrutin som funkar",
-    category: "Välmående",
-    level: "Nybörjare",
+    category: "Wellness",
+    level: "Beginner",
     minutesPerDay: 15,
     summary:
       "Somna lättare och vakna mer utvilad med en enkel kvällsrutin byggd på hur kroppens sömnsystem faktiskt fungerar.",
@@ -485,8 +485,8 @@ export const courses: Course[] = [
   {
     slug: "lugn-pa-10-min",
     title: "Lugn på 10 minuter: stresshantering",
-    category: "Välmående",
-    level: "Nybörjare",
+    category: "Wellness",
+    level: "Beginner",
     minutesPerDay: 10,
     summary:
       "Praktiska verktyg för att varva ner snabbt, bryta stresspiraler och bygga in små lugn-stunder i en hektisk vardag.",
@@ -516,8 +516,8 @@ export const courses: Course[] = [
   {
     slug: "sjalvkansla",
     title: "Självkänsla & självförtroende",
-    category: "Personlig utveckling",
-    level: "Medel",
+    category: "Personal growth",
+    level: "Intermediate",
     minutesPerDay: 10,
     summary:
       "Förstå skillnaden mellan självkänsla och självförtroende – och bygg båda med konkreta, dagliga övningar.",
@@ -553,8 +553,8 @@ export const courses: Course[] = [
   {
     slug: "energirik-morgon",
     title: "Energirik morgonrutin",
-    category: "Välmående",
-    level: "Nybörjare",
+    category: "Wellness",
+    level: "Beginner",
     minutesPerDay: 15,
     summary:
       "Designa en morgon som ger dig energi och fokus istället för stress – byggd på enkla vanor som faktiskt håller.",
@@ -590,8 +590,8 @@ export const courses: Course[] = [
   {
     slug: "lymfdranage",
     title: "Lymfdränage hemma: mindre svullnad",
-    category: "Skönhet",
-    level: "Nybörjare",
+    category: "Beauty",
+    level: "Beginner",
     minutesPerDay: 8,
     summary:
       "Daglig lymfmassage som tömmer vätska, minskar svullnad och ger en skarpare ansikts- och käklinje.",
@@ -625,8 +625,8 @@ export const courses: Course[] = [
   {
     slug: "harvard-moget-har",
     title: "Hårvård & volym för moget hår",
-    category: "Skönhet",
-    level: "Nybörjare",
+    category: "Beauty",
+    level: "Beginner",
     minutesPerDay: 5,
     summary: "Ge tunnare, moget hår mer volym, lyster och styrka med rätt rutiner och produkter.",
     lessons: [
@@ -658,8 +658,8 @@ export const courses: Course[] = [
   {
     slug: "andning-angest",
     title: "Andningsövningar för ångest",
-    category: "Välmående",
-    level: "Nybörjare",
+    category: "Wellness",
+    level: "Beginner",
     minutesPerDay: 8,
     summary:
       "Enkla andningstekniker som lugnar nervsystemet och dämpar ångest – var som helst, på några minuter.",
@@ -688,8 +688,8 @@ export const courses: Course[] = [
   {
     slug: "hallning-rorlighet",
     title: "Hållning & rörlighet på 10 minuter",
-    category: "Hälsa",
-    level: "Nybörjare",
+    category: "Health",
+    level: "Beginner",
     minutesPerDay: 10,
     summary:
       "Motverka stelhet och skärmhållning med korta dagliga rörelser som öppnar kroppen och minskar värk.",
@@ -722,8 +722,8 @@ export const courses: Course[] = [
   {
     slug: "personlig-stil-40",
     title: "Personlig stil & garderob 40+",
-    category: "Stil",
-    level: "Medel",
+    category: "Style",
+    level: "Intermediate",
     minutesPerDay: 10,
     summary:
       "Hitta en stil som känns som du och som lyfter dig – bygg en enkel, fungerande garderob för livet efter 40.",
@@ -752,8 +752,8 @@ export const courses: Course[] = [
   {
     slug: "mindful-eating",
     title: "Mindful eating & hälsosamma vanor",
-    category: "Hälsa",
-    level: "Nybörjare",
+    category: "Health",
+    level: "Beginner",
     minutesPerDay: 10,
     summary: "Bygg ett lugnare, hälsosammare förhållande till mat – utan dieter, regler eller skuld.",
     lessons: [
@@ -781,8 +781,8 @@ export const courses: Course[] = [
   {
     slug: "meditation-nyborjare",
     title: "Meditation för nybörjare",
-    category: "Välmående",
-    level: "Nybörjare",
+    category: "Wellness",
+    level: "Beginner",
     minutesPerDay: 10,
     summary: "Kom igång med meditation från noll – korta, enkla pass som minskar stress och ökar fokus.",
     lessons: [
@@ -810,8 +810,8 @@ export const courses: Course[] = [
   {
     slug: "digital-detox",
     title: "Digital detox & fokus",
-    category: "Personlig utveckling",
-    level: "Nybörjare",
+    category: "Personal growth",
+    level: "Beginner",
     minutesPerDay: 10,
     summary: "Ta tillbaka fokus och lugn från skärmen med enkla gränser som faktiskt håller.",
     lessons: [
@@ -839,8 +839,8 @@ export const courses: Course[] = [
   {
     slug: "naglar-hander",
     title: "Vackra naglar & händer",
-    category: "Skönhet",
-    level: "Nybörjare",
+    category: "Beauty",
+    level: "Beginner",
     minutesPerDay: 5,
     summary:
       "Vårda händer och naglar så de ser unga och välvårdade ut – ofta det som avslöjar ålder mest.",
@@ -869,8 +869,8 @@ export const courses: Course[] = [
   {
     slug: "anti-age-kost",
     title: "Anti-age på tallriken: kost för huden",
-    category: "Hälsa",
-    level: "Medel",
+    category: "Health",
+    level: "Intermediate",
     minutesPerDay: 10,
     summary:
       "Ät för hud som åldras vackert – enkla kostval som stödjer kollagen, fukt och lyster inifrån.",

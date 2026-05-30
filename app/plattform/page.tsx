@@ -24,7 +24,7 @@ function CourseCard({ c, locked }: { c: Course; locked?: boolean }) {
         {locked && (
           <div className="absolute inset-0 flex items-center justify-center bg-ink/55">
             <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-ink">
-              🔒 Lås upp med medlemskap
+              🔒 Unlock with membership
             </span>
           </div>
         )}
@@ -36,7 +36,7 @@ function CourseCard({ c, locked }: { c: Course; locked?: boolean }) {
         <h3 className="mt-2 font-serif text-lg font-bold text-ink">{c.title}</h3>
         <p className="mt-2 grow text-sm text-muted">{c.summary}</p>
         <span className="mt-4 text-sm font-medium text-muted">
-          {lessonCount} lektioner · {c.minutesPerDay} min/dag
+          {lessonCount} lessons · {c.minutesPerDay} min/day
         </span>
       </div>
     </>
@@ -62,29 +62,29 @@ export default async function CatalogPage() {
 
   return (
     <main className="container-tight py-10">
-      <p className="eyebrow mb-2">{brand.name} Akademi</p>
+      <p className="eyebrow mb-2">{brand.name} Academy</p>
 
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <h1 className="font-serif text-3xl font-bold text-ink sm:text-4xl">
-            Dina kurser
+            Your library
           </h1>
           <p className="mt-1 text-muted">
-            Kurserna du köpt är dina för alltid – resten ingår så länge ditt
-            medlemskap är aktivt.
+            Courses you've purchased are yours forever — the rest stay as long
+            as your membership is active.
           </p>
         </div>
         {streak.count > 0 && (
           <div
             className="flex items-center gap-2 rounded-full border border-blush bg-cream px-4 py-2"
-            title={`Senast aktiv ${streak.lastDate}`}
+            title={`Last active ${streak.lastDate}`}
           >
             <span className="text-xl">🔥</span>
             <div className="text-sm leading-tight">
               <p className="font-bold text-ink">
-                {streak.count} {streak.count === 1 ? "dag" : "dagar"} i rad
+                {streak.count}-day streak
               </p>
-              <p className="text-[11px] text-muted">Konsekvens vinner.</p>
+              <p className="text-[11px] text-muted">Consistency wins.</p>
             </div>
           </div>
         )}
@@ -97,7 +97,7 @@ export default async function CatalogPage() {
       {core.length > 0 && (
         <>
           <h2 className="mt-8 font-serif text-xl font-bold text-ink">
-            Ingår i ditt köp
+            Yours forever
           </h2>
           <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {core.map((c) => (
@@ -109,21 +109,21 @@ export default async function CatalogPage() {
 
       <div className="mt-12 flex flex-wrap items-center justify-between gap-3">
         <h2 className="font-serif text-xl font-bold text-ink">
-          Mer i ditt medlemskap
+          More with your membership
         </h2>
         {!member && (
           <Link
             href="/plattform/konto"
             className="text-sm font-semibold text-rose hover:text-rose-dark"
           >
-            Återaktivera →
+            Reactivate →
           </Link>
         )}
       </div>
       <p className="text-sm text-muted">
         {member
-          ? `${membership.courses}+ kurser ingår i ${membership.name}.`
-          : "Ditt medlemskap är inte aktivt – återaktivera för att låsa upp dessa kurser."}
+          ? `${membership.courses}+ courses included with ${membership.name}.`
+          : "Your membership isn't active — reactivate to unlock these courses."}
       </p>
       <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {rest.map((c) => (

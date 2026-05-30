@@ -9,7 +9,7 @@ export const CURRENCY = "sek";
 export const brand = {
   name: "Luumora",
   // Rename in this one place to rebrand the whole site.
-  tagline: "10 minuters makeup som tar 10 år",
+  tagline: "Daily rituals for a glowing life",
   supportEmail: "support@luumora.online",
 };
 
@@ -28,11 +28,11 @@ export type Product = {
 
 export const mainOffer: Product = {
   id: "makeup40",
-  name: "10 Min Makeup 40+ – Mästarkursen",
+  name: "10-Minute Makeup 40+ — The Masterclass",
   blurb:
-    "Hela proffsguiden till att se yngre, fräschare och mer självsäker ut på 10 minuter. 9 djupgående lektioner, proffstips, do's & don'ts och checklistor.",
+    "The complete pro guide to looking younger, fresher, and more confident in 10 minutes. 9 in-depth lessons, pro tips, do's & don'ts, and checklists.",
   priceOre: 1000, // 10 kr
-  regularPriceOre: 39700, // 397 kr — sätt till ert verkliga ordinarie pris
+  regularPriceOre: 39700, // 397 kr — set to your real regular price
   file: "10MinMakeup40_Masterkurs_Svenska.pdf",
 };
 
@@ -41,26 +41,26 @@ export const mainOffer: Product = {
 export const bonuses: Product[] = [
   {
     id: "face-sculpt",
-    name: "Face Sculpt: Ansiktsritual för ett yngre ansikte",
-    blurb: "Daglig 5-minutersritual som lyfter och definierar ansiktet naturligt.",
+    name: "Face Sculpt: Daily ritual for a younger face",
+    blurb: "5-minute daily ritual that naturally lifts and defines your face.",
     priceOre: 0,
-    regularPriceOre: 19700, // värde 197 kr
+    regularPriceOre: 19700, // listed value 197 kr
     file: "FaceSculpt_AlltIEtt_Svenska.pdf",
   },
   {
     id: "lymph-detox",
-    name: "21-dagars Lymfdetox: Smalare ansikte & kropp",
-    blurb: "Enkel daglig lymfmassage för mindre svullnad och en skarpare käklinje.",
+    name: "21-Day Lymph Detox: Slimmer face & body",
+    blurb: "Simple daily lymph massage to reduce puffiness and sharpen your jawline.",
     priceOre: 0,
-    regularPriceOre: 24700, // värde 247 kr
+    regularPriceOre: 24700, // listed value 247 kr
     file: "21Dagars_LymfDetox_Svenska.pdf",
   },
   {
     id: "face-lifting",
-    name: "Face Lifting: Forma ansiktet & se yngre ut",
-    blurb: "Lyftande tekniker för panna, kinder och käke – helt utan nålar.",
+    name: "Face Lifting: Sculpt your face & look younger",
+    blurb: "Lifting techniques for forehead, cheeks, and jaw — without needles.",
     priceOre: 0,
-    regularPriceOre: 19700, // värde 197 kr
+    regularPriceOre: 19700, // listed value 197 kr
     file: "Ansiktslyft_SkulpteraDittAnsikte_Svenska.pdf",
   },
 ];
@@ -70,8 +70,8 @@ export const bonuses: Product[] = [
 // (price + interval + cancel) next to a consent checkbox before payment.
 export const membership = {
   id: "lumora-membership",
-  name: "Luumora Membership",
-  monthlyPriceOre: 40700, // 407 kr/mån
+  name: "Luumora Academy Membership",
+  monthlyPriceOre: 40700, // 407 kr/mo
   trialDays: 3,
   courses: 206,
   // Stripe Price is created once via the API using this lookup_key, then reused.

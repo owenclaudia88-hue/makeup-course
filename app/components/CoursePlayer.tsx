@@ -103,7 +103,7 @@ export default function CoursePlayer({
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="eyebrow">
-              {modules[pos.m]?.title || `Lektion ${flatIdx + 1}`}
+              {modules[pos.m]?.title || `Lesson ${flatIdx + 1}`}
             </p>
             <h2 className="truncate font-serif text-xl font-bold text-ink">
               {current.title}
@@ -118,7 +118,7 @@ export default function CoursePlayer({
                 : "bg-rose text-white hover:bg-rose-dark"
             }`}
           >
-            {isDone ? "✓ Klart" : "Markera som klar"}
+            {isDone ? "✓ Done" : "Mark complete"}
           </button>
         </div>
 
@@ -129,7 +129,7 @@ export default function CoursePlayer({
             disabled={!prev}
             className="text-sm font-medium text-muted hover:text-rose disabled:opacity-40"
           >
-            ← Föregående
+            ← Previous
           </button>
           <button
             type="button"
@@ -137,7 +137,7 @@ export default function CoursePlayer({
             disabled={!next}
             className="text-sm font-medium text-rose hover:text-rose-dark disabled:opacity-40"
           >
-            Nästa →
+            Next →
           </button>
         </div>
 
@@ -145,7 +145,7 @@ export default function CoursePlayer({
           <div className="card mt-6 flex items-center gap-4 p-5">
             <div className="text-3xl">▶️</div>
             <div className="flex-1 min-w-0">
-              <p className="eyebrow">Nästa lektion</p>
+              <p className="eyebrow">Up next</p>
               <p className="truncate font-semibold text-ink">{next.title}</p>
               {next.durationSeconds ? (
                 <p className="text-xs text-muted">{fmt(next.durationSeconds)}</p>
@@ -156,17 +156,17 @@ export default function CoursePlayer({
               onClick={() => setPos({ m: next.mIdx, l: next.lIdx })}
               className="shrink-0 rounded-full bg-rose px-4 py-2 text-sm font-semibold text-white hover:bg-rose-dark"
             >
-              Fortsätt
+              Continue
             </button>
           </div>
         ) : (
           <div className="card mt-6 p-8 text-center">
             <p className="text-3xl">🌟</p>
             <p className="mt-2 font-semibold text-ink">
-              Du har klarat hela kursen!
+              You finished the whole course!
             </p>
             <p className="mt-1 text-sm text-muted">
-              Återvänd när du vill – kursen finns kvar i ditt medlemskap.
+              Come back any time — this course stays in your library.
             </p>
           </div>
         )}
@@ -175,7 +175,7 @@ export default function CoursePlayer({
       <aside className="lg:sticky lg:top-6 lg:self-start">
         <div className="card p-4">
           <div className="flex items-center justify-between">
-            <p className="eyebrow">Kursöversikt</p>
+            <p className="eyebrow">Course outline</p>
             <p className="text-xs font-semibold text-rose">
               {doneCount} / {totalLessons}
             </p>

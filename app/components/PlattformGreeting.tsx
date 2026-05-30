@@ -11,17 +11,17 @@ export default function PlattformGreeting() {
   if (h == null) return null; // avoid SSR/CSR text mismatch
 
   const greet =
-    h < 5 ? "Trevlig kväll"
-      : h < 10 ? "God morgon"
-        : h < 13 ? "Hej"
-          : h < 18 ? "God eftermiddag"
-            : "God kväll";
+    h < 5 ? "Late night"
+      : h < 10 ? "Good morning"
+        : h < 13 ? "Hi there"
+          : h < 18 ? "Good afternoon"
+            : "Good evening";
 
   const tip =
-    h < 10 ? "Perfekt tid för en kort morgonrutin – 5 minuter räcker."
-      : h < 13 ? "Korta pass mitt på dagen blir ofta de mest gjorda."
-        : h < 18 ? "En mikropaus nu sätter tonen för resten av dagen."
-          : "Avsluta dagen med något lugnt – lymfdränage eller andning.";
+    h < 10 ? "Perfect time for a short morning ritual — 5 minutes is enough."
+      : h < 13 ? "Short midday sessions are the ones that actually get done."
+        : h < 18 ? "A micro-break right now sets the tone for the rest of the day."
+          : "Wind down with something gentle — lymph drainage or a breathing exercise.";
 
   return (
     <p className="text-sm text-muted">

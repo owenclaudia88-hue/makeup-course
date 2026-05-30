@@ -102,7 +102,7 @@ export default async function CoursePage({
         href="/plattform"
         className="text-sm font-medium text-rose hover:text-rose-dark"
       >
-        ← Alla kurser
+        ← All courses
       </Link>
       <CourseCover
         slug={course.slug}
@@ -110,8 +110,8 @@ export default async function CoursePage({
         className="mt-4 aspect-[16/6] w-full rounded-2xl"
       />
       <p className="eyebrow mb-2 mt-4">
-        {course.category} · {course.level} · {course.minutesPerDay} min/dag
-        {totalVideoLessons > 0 ? <> · {totalVideoLessons} lektioner</> : null}
+        {course.category} · {course.level} · {course.minutesPerDay} min/day
+        {totalVideoLessons > 0 ? <> · {totalVideoLessons} lessons</> : null}
       </p>
       <h1 className="font-serif text-3xl font-bold text-ink sm:text-4xl">
         {course.title}
@@ -122,14 +122,14 @@ export default async function CoursePage({
         <div className="card mt-8 p-8 text-center">
           <p className="text-2xl">🔒</p>
           <p className="mt-2 text-lg font-semibold text-ink">
-            Den här kursen ingår i {membership.name}
+            This course is included with {membership.name}
           </p>
           <p className="mt-2 text-muted">
-            Ditt medlemskap är inte aktivt just nu. Återaktivera för att få
-            tillgång till alla {membership.courses}+ kurser igen.
+            Your membership isn't active right now. Reactivate to unlock all{" "}
+            {membership.courses}+ courses again.
           </p>
           <Link href="/plattform/konto" className="btn-primary mt-5">
-            Hantera medlemskap
+            Manage membership
           </Link>
         </div>
       )}
@@ -155,10 +155,10 @@ export default async function CoursePage({
           <div className="card flex items-center gap-4 p-5">
             <div className="text-3xl">🎬</div>
             <div>
-              <p className="font-semibold text-ink">Videolektionerna laddas upp</p>
+              <p className="font-semibold text-ink">Video lessons uploading</p>
               <p className="text-sm text-muted">
-                Du ser kursens upplägg nedan. Lektionerna blir spelbara så snart
-                videorna är klara.
+                You can see the course structure below. Lessons become playable
+                as soon as the videos are ready.
               </p>
             </div>
           </div>
@@ -201,14 +201,14 @@ export default async function CoursePage({
             className="h-[85vh] w-full rounded-2xl border border-blush bg-white"
           />
           <p className="mt-2 text-center text-xs text-muted">
-            Ser du inget?{" "}
+            Can't see anything?{" "}
             <a
               href={`/api/kurs-pdf?slug=${course.slug}`}
               target="_blank"
               rel="noreferrer"
               className="text-rose hover:text-rose-dark"
             >
-              Öppna PDF i ny flik
+              Open PDF in a new tab
             </a>
           </p>
         </div>
@@ -219,7 +219,7 @@ export default async function CoursePage({
           {course.lessons.map((l, i) => (
             <article key={i} className="card p-6">
               <span className="text-xs font-semibold uppercase tracking-wide text-rose">
-                Lektion {i + 1}
+                Lesson {i + 1}
               </span>
               <h2 className="mt-1 font-serif text-xl font-bold text-ink">{l.title}</h2>
               <p className="mt-3 rounded-lg bg-blush/40 p-3 text-sm font-medium text-ink">
@@ -250,13 +250,13 @@ export default async function CoursePage({
 
       {mode === "empty" && (
         <div className="card mt-8 p-8 text-center text-muted">
-          Innehåll kommer snart.
+          Content coming soon.
         </div>
       )}
 
       {course.learningOutcomes && course.learningOutcomes.length > 0 && (
         <section className="mt-12">
-          <h2 className="font-serif text-2xl font-bold text-ink">Vad du lär dig</h2>
+          <h2 className="font-serif text-2xl font-bold text-ink">What you'll learn</h2>
           <ul className="mt-4 grid gap-2 sm:grid-cols-2">
             {course.learningOutcomes.map((o, i) => (
               <li key={i} className="flex gap-2 text-ink">
@@ -270,7 +270,7 @@ export default async function CoursePage({
 
       {course.description && course.description.length > 0 && (
         <section className="mt-12">
-          <h2 className="font-serif text-2xl font-bold text-ink">Om kursen</h2>
+          <h2 className="font-serif text-2xl font-bold text-ink">About this course</h2>
           <div className="mt-4 space-y-4 text-muted">
             {course.description.map((p, i) => (
               <p key={i}>{p}</p>
@@ -281,7 +281,7 @@ export default async function CoursePage({
 
       {course.whoFor && course.whoFor.length > 0 && (
         <section className="mt-12">
-          <h2 className="font-serif text-2xl font-bold text-ink">För vem är kursen</h2>
+          <h2 className="font-serif text-2xl font-bold text-ink">Who this is for</h2>
           <ul className="mt-4 space-y-2">
             {course.whoFor.map((w, i) => (
               <li key={i} className="flex gap-2 text-ink">
@@ -295,7 +295,7 @@ export default async function CoursePage({
 
       {course.instructor && (
         <section className="mt-12">
-          <h2 className="font-serif text-2xl font-bold text-ink">Din kursledare</h2>
+          <h2 className="font-serif text-2xl font-bold text-ink">Your instructor</h2>
           <div className="card mt-4 p-6">
             <h3 className="font-serif text-xl font-bold text-ink">
               {course.instructor.name}
@@ -309,7 +309,7 @@ export default async function CoursePage({
               course.instructor.credentials.length > 0 && (
                 <>
                   <h4 className="mt-5 font-semibold text-ink">
-                    Undervisning &amp; erfarenhet
+                    Teaching &amp; experience
                   </h4>
                   <ul className="mt-2 space-y-1 text-sm text-muted">
                     {course.instructor.credentials.map((c, i) => (
@@ -321,7 +321,7 @@ export default async function CoursePage({
             {course.instructor.education &&
               course.instructor.education.length > 0 && (
                 <>
-                  <h4 className="mt-5 font-semibold text-ink">Utbildning</h4>
+                  <h4 className="mt-5 font-semibold text-ink">Education</h4>
                   <ul className="mt-2 space-y-1 text-sm text-muted">
                     {course.instructor.education.map((e, i) => (
                       <li key={i}>• {e}</li>
