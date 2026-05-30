@@ -5,36 +5,103 @@ import { getCourse } from "@/lib/courses";
 import { hasActiveMembership } from "@/lib/access";
 import { bunnyEmbedUrl } from "@/lib/bunny";
 import { membership } from "@/lib/offer";
+import { getCourseCompleted, getLastLesson } from "@/lib/progress";
 import CourseCover from "../../../components/CourseCover";
-import VideoCourse from "../../../components/VideoCourse";
+import CoursePlayer from "../../../components/CoursePlayer";
 
 export const dynamic = "force-dynamic";
 
-export default async function CoursePage({ params }: { params: { slug: string } }) {
+function fmtDur(s: number): string {
+  const m = Math.floor(s / 60);
+  const ss = s % 60;
+  return `${m}:${ss.toString().padStart(2, "0")}`;
+}
+
+function parseIntOr(s: string | undefined, fallback: number): number {
+  if (!s) return fallback;
+  const n = parseInt(s, 10);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+export default async function CoursePage({
+  params,
+  searchParams,
+}: {
+  params: { slug: string };
+  searchParams: { m?: string; l?: string };
+}) {
   const session = requireSession();
   const course = getCourse(params.slug);
   if (!course) notFound();
 
-  // Core (purchased) courses are always accessible; membership courses require
-  // a live subscription.
   const locked = !course.core && !(await hasActiveMembership(session.email));
 
-  const videoLessons = (course.videoLessons ?? []).map((l) => ({
-    title: l.title,
-    url: bunnyEmbedUrl(l.videoId),
-  }));
-  const hasVideo = videoLessons.length > 0;
-  const playable = videoLessons.filter((l) => l.url) as { title: string; url: string }[];
+  const rawModules =
+    course.modules ??
+    (course.videoLessons
+      ? [
+          {
+            title: "",
+            lessons: course.videoLessons.map((l) => ({
+              title: l.title,
+              videoId: l.videoId,
+            })),
+          },
+        ]
+      : []);
 
-  let mode: "locked" | "video" | "video-pending" | "pdf" | "lessons";
+  const resolvedModules = rawModules.map((m) => ({
+    title: m.title,
+    lessons: m.lessons.map((l) => ({
+      title: l.title,
+      url: l.videoId ? bunnyEmbedUrl(l.videoId) : null,
+      durationSeconds: l.durationSeconds,
+    })),
+  }));
+  const totalVideoLessons = resolvedModules.reduce(
+    (acc, m) => acc + m.lessons.length,
+    0,
+  );
+  const playableCount = resolvedModules.reduce(
+    (acc, m) => acc + m.lessons.filter((l) => l.url).length,
+    0,
+  );
+
+  let mode: "locked" | "video" | "video-pending" | "pdf" | "lessons" | "empty";
   if (locked) mode = "locked";
-  else if (hasVideo) mode = playable.length === videoLessons.length ? "video" : "video-pending";
+  else if (totalVideoLessons > 0 && playableCount === totalVideoLessons)
+    mode = "video";
+  else if (totalVideoLessons > 0) mode = "video-pending";
   else if (course.pdf) mode = "pdf";
-  else mode = "lessons";
+  else if (course.lessons && course.lessons.length > 0) mode = "lessons";
+  else mode = "empty";
+
+  // Persisted progress drives initial position + the sidebar's checkmarks.
+  const [completed, lastPos] =
+    mode === "video"
+      ? await Promise.all([
+          getCourseCompleted(session.email, course.slug),
+          getLastLesson(session.email, course.slug),
+        ])
+      : [[], null];
+
+  const reqM = parseIntOr(searchParams.m, lastPos?.m ?? 0);
+  const reqL = parseIntOr(searchParams.l, lastPos?.l ?? 0);
+  const safeM = Math.min(
+    Math.max(reqM, 0),
+    Math.max(resolvedModules.length - 1, 0),
+  );
+  const safeL = Math.min(
+    Math.max(reqL, 0),
+    Math.max((resolvedModules[safeM]?.lessons.length ?? 1) - 1, 0),
+  );
 
   return (
     <main className="container-narrow py-10">
-      <Link href="/plattform" className="text-sm font-medium text-rose hover:text-rose-dark">
+      <Link
+        href="/plattform"
+        className="text-sm font-medium text-rose hover:text-rose-dark"
+      >
         ← Alla kurser
       </Link>
       <CourseCover
@@ -44,8 +111,11 @@ export default async function CoursePage({ params }: { params: { slug: string } 
       />
       <p className="eyebrow mb-2 mt-4">
         {course.category} · {course.level} · {course.minutesPerDay} min/dag
+        {totalVideoLessons > 0 ? <> · {totalVideoLessons} lektioner</> : null}
       </p>
-      <h1 className="font-serif text-3xl font-bold text-ink sm:text-4xl">{course.title}</h1>
+      <h1 className="font-serif text-3xl font-bold text-ink sm:text-4xl">
+        {course.title}
+      </h1>
       <p className="mt-2 text-muted">{course.summary}</p>
 
       {mode === "locked" && (
@@ -55,8 +125,8 @@ export default async function CoursePage({ params }: { params: { slug: string } 
             Den här kursen ingår i {membership.name}
           </p>
           <p className="mt-2 text-muted">
-            Ditt medlemskap är inte aktivt just nu. Återaktivera för att få tillgång till alla{" "}
-            {membership.courses}+ kurser igen.
+            Ditt medlemskap är inte aktivt just nu. Återaktivera för att få
+            tillgång till alla {membership.courses}+ kurser igen.
           </p>
           <Link href="/plattform/konto" className="btn-primary mt-5">
             Hantera medlemskap
@@ -64,12 +134,62 @@ export default async function CoursePage({ params }: { params: { slug: string } 
         </div>
       )}
 
-      {mode === "video" && <VideoCourse lessons={playable} />}
+      {mode === "video" && (
+        <CoursePlayer
+          slug={course.slug}
+          modules={resolvedModules.map((m) => ({
+            title: m.title,
+            lessons: m.lessons.map((l) => ({
+              title: l.title,
+              url: l.url as string,
+              durationSeconds: l.durationSeconds,
+            })),
+          }))}
+          initial={{ m: safeM, l: safeL }}
+          initialCompleted={completed.map((c) => `${c.m}::${c.l}`)}
+        />
+      )}
 
       {mode === "video-pending" && (
-        <div className="card mt-8 p-8 text-center text-muted">
-          Videon konfigureras snart. (Bunny Stream är inte kopplat än – lägg in
-          BUNNY_LIBRARY_ID och BUNNY_TOKEN_KEY.)
+        <div className="mt-6">
+          <div className="card flex items-center gap-4 p-5">
+            <div className="text-3xl">🎬</div>
+            <div>
+              <p className="font-semibold text-ink">Videolektionerna laddas upp</p>
+              <p className="text-sm text-muted">
+                Du ser kursens upplägg nedan. Lektionerna blir spelbara så snart
+                videorna är klara.
+              </p>
+            </div>
+          </div>
+          <div className="mt-6 space-y-6">
+            {resolvedModules.map((mod, mIdx) => (
+              <section key={mIdx}>
+                {mod.title && (
+                  <h3 className="mb-2 font-serif text-lg font-bold text-ink">
+                    {mod.title}
+                  </h3>
+                )}
+                <div className="space-y-2">
+                  {mod.lessons.map((l, lIdx) => (
+                    <div
+                      key={lIdx}
+                      className="flex items-center gap-3 rounded-xl border border-blush bg-cream/30 p-3"
+                    >
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blush text-sm font-bold text-rose">
+                        {lIdx + 1}
+                      </span>
+                      <span className="flex-1 font-medium text-ink/70">{l.title}</span>
+                      {l.durationSeconds ? (
+                        <span className="text-xs text-muted">{fmtDur(l.durationSeconds)}</span>
+                      ) : null}
+                      <span className="text-muted">🔒</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
         </div>
       )}
 
@@ -94,7 +214,7 @@ export default async function CoursePage({ params }: { params: { slug: string } 
         </div>
       )}
 
-      {mode === "lessons" && (
+      {mode === "lessons" && course.lessons && (
         <div className="mt-8 space-y-5">
           {course.lessons.map((l, i) => (
             <article key={i} className="card p-6">
@@ -102,7 +222,9 @@ export default async function CoursePage({ params }: { params: { slug: string } 
                 Lektion {i + 1}
               </span>
               <h2 className="mt-1 font-serif text-xl font-bold text-ink">{l.title}</h2>
-              <p className="mt-3 rounded-lg bg-blush/40 p-3 text-sm font-medium text-ink">💡 {l.insight}</p>
+              <p className="mt-3 rounded-lg bg-blush/40 p-3 text-sm font-medium text-ink">
+                💡 {l.insight}
+              </p>
               <p className="mt-3 text-muted">{l.body}</p>
               {l.steps && (
                 <ol className="mt-3 list-decimal space-y-1 pl-5 text-ink">
@@ -124,6 +246,91 @@ export default async function CoursePage({ params }: { params: { slug: string } 
             </article>
           ))}
         </div>
+      )}
+
+      {mode === "empty" && (
+        <div className="card mt-8 p-8 text-center text-muted">
+          Innehåll kommer snart.
+        </div>
+      )}
+
+      {course.learningOutcomes && course.learningOutcomes.length > 0 && (
+        <section className="mt-12">
+          <h2 className="font-serif text-2xl font-bold text-ink">Vad du lär dig</h2>
+          <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+            {course.learningOutcomes.map((o, i) => (
+              <li key={i} className="flex gap-2 text-ink">
+                <span className="font-bold text-rose">✓</span>
+                <span>{o}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {course.description && course.description.length > 0 && (
+        <section className="mt-12">
+          <h2 className="font-serif text-2xl font-bold text-ink">Om kursen</h2>
+          <div className="mt-4 space-y-4 text-muted">
+            {course.description.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {course.whoFor && course.whoFor.length > 0 && (
+        <section className="mt-12">
+          <h2 className="font-serif text-2xl font-bold text-ink">För vem är kursen</h2>
+          <ul className="mt-4 space-y-2">
+            {course.whoFor.map((w, i) => (
+              <li key={i} className="flex gap-2 text-ink">
+                <span className="font-bold text-rose">•</span>
+                <span>{w}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {course.instructor && (
+        <section className="mt-12">
+          <h2 className="font-serif text-2xl font-bold text-ink">Din kursledare</h2>
+          <div className="card mt-4 p-6">
+            <h3 className="font-serif text-xl font-bold text-ink">
+              {course.instructor.name}
+            </h3>
+            <div className="mt-3 space-y-3 text-muted">
+              {course.instructor.bio.map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
+            </div>
+            {course.instructor.credentials &&
+              course.instructor.credentials.length > 0 && (
+                <>
+                  <h4 className="mt-5 font-semibold text-ink">
+                    Undervisning &amp; erfarenhet
+                  </h4>
+                  <ul className="mt-2 space-y-1 text-sm text-muted">
+                    {course.instructor.credentials.map((c, i) => (
+                      <li key={i}>• {c}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            {course.instructor.education &&
+              course.instructor.education.length > 0 && (
+                <>
+                  <h4 className="mt-5 font-semibold text-ink">Utbildning</h4>
+                  <ul className="mt-2 space-y-1 text-sm text-muted">
+                    {course.instructor.education.map((e, i) => (
+                      <li key={i}>• {e}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+          </div>
+        </section>
       )}
     </main>
   );

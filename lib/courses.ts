@@ -1,12 +1,32 @@
 // Course catalogue for the Luumora platform. Pure data — add a course by
 // appending to `courses`. The UI renders any number of courses/lessons.
 
+import { courseVideos } from "../data/course-videos";
+
 export type Lesson = {
   title: string;
-  insight: string; // one-line key takeaway
-  body: string; // short explanation
-  steps?: string[]; // ordered how-to
-  checklist?: string[]; // self-check
+  insight: string;
+  body: string;
+  steps?: string[];
+  checklist?: string[];
+};
+
+export type VideoLesson = {
+  title: string;
+  videoId?: string; // Bunny Stream GUID; assigned by sync once uploaded
+  durationSeconds?: number; // Source-of-truth for the sync script's duration match
+};
+
+export type Module = {
+  title: string;
+  lessons: VideoLesson[];
+};
+
+export type Instructor = {
+  name: string;
+  bio: string[]; // paragraphs
+  credentials?: string[];
+  education?: string[];
 };
 
 export type Course = {
@@ -16,15 +36,21 @@ export type Course = {
   level: "Nybörjare" | "Medel" | "Avancerad";
   minutesPerDay: number;
   summary: string;
-  lessons: Lesson[];
+  // Text lessons (used when there's no PDF or video).
+  lessons?: Lesson[];
   // true = part of the paid bundle the buyer gets immediately ("Dina kurser").
   core?: boolean;
-  // Filename in /protected. When set, the course is shown as the full PDF in an
-  // embedded reader instead of the text lessons.
+  // Filename in /protected. Renders the full PDF in an embedded reader.
   pdf?: string;
-  // Bunny Stream video lessons. When set (and Bunny is configured), the course
-  // is shown as a video player + lesson list. Takes priority over pdf/lessons.
+  // Legacy flat video list (one anonymous module). Prefer `modules` going forward.
   videoLessons?: { title: string; videoId: string }[];
+  // Module-grouped video lessons. Renders the gated player + lesson list.
+  modules?: Module[];
+  // Rich course-page content rendered below the player/lessons.
+  description?: string[]; // long-form paragraphs
+  learningOutcomes?: string[]; // "Vad du lär dig"
+  whoFor?: string[]; // "För vem är kursen"
+  instructor?: Instructor;
 };
 
 /** Cover image path for a course (drop <slug>.webp into public/kurser/). */
@@ -206,6 +232,108 @@ export const courses: Course[] = [
         body:
           "Gör övningarna dagligen och var tålmodig – som all muskelträning syns resultatet med regelbundenhet, inte enstaka pass.",
         checklist: ["Jag gör övningarna dagligen", "Jag arbetar musklerna utan att dra i huden", "Jag ger det några veckor"],
+      },
+    ],
+  },
+  {
+    slug: "natural-face-lift",
+    title: "Natural Face Lift: Ansiktsträning, massage & djup avslappning",
+    category: "Bonus",
+    level: "Nybörjare",
+    minutesPerDay: 10,
+    core: true,
+    summary:
+      "En komplett, naturlig ansiktslyftning som kombinerar korta ansiktstekniker, längre helhetspass och avslappnande massage. 30 lektioner i tre moduler – från Face Scan och Natural Botox till Gua Sha.",
+    description: [
+      "Natural Face Lift är en komplett ansiktsträningskurs designad för naturlig föryngring genom en omsorgsfullt strukturerad kombination av ansiktsövningar, ansiktsmassage, nackövningar och avslappningstekniker. Kursen arbetar med ansiktet som en del av helheten – inklusive nacke, käke, cirkulation, lymfflöde och muskelbalans – för synliga, hållbara resultat utan injektioner eller invasiva behandlingar.",
+      "Programmet börjar med övningar för medvetenhet och förberedelse, som Face Scan och milda ögonrotationer, som hjälper dig att återansluta till ditt ansikte, identifiera spänningsmönster och förbereda vävnaderna för rörelse. Dessa introduktionsövningar bygger medvetenhet, förbättrar rörlighet och skapar en stark grund för effektivt ansiktsarbete.",
+      "Genom kursen guidas du i ett brett spektrum av riktade ansiktsövningar för panna och rynkor, ögonparti, kinder och mitten av ansiktet, mun och läppar, käke och TMJ, samt nacke. Övningar som Natural Botox, Super Cheeks, Yum Yum, Super Boost, Side Nodding, Swan Neck och Koala Neck är designade för att aktivera underaktiverade muskler samtidigt som de slappnar av överaktiva – för att återställa balansen i ansiktet.",
+      "Ansiktsmassage och avslappningsövningar är integrerade genom hela kursen för att stödja blodflöde, lymfdränage och nervsystemets reglering. Varje lektion är kort och fokuserad (cirka 40–90 sekunder i Modul 1), vilket gör kursen lätt att följa och enkel att integrera i vardagen. Du kan göra enskilda övningar eller kombinera dem till en längre rutin.",
+      "Med regelbunden träning kan du uppleva minskade ansikts- och käkspänningar, förbättrad muskeltonus och balans, ökad cirkulation och lymfflöde, ett mer lyft och utvilat uttryck och större medvetenhet om ansiktets vanor och hållning.",
+    ],
+    learningOutcomes: [
+      "Förstå grunderna i ansiktets muskler, fascia och hudhälsa",
+      "Bemästra riktade ansiktsyoga- och toningsövningar",
+      "Släpp spänningar i käke, panna och ögon med stressavlastande tekniker",
+      "Integrera lymfdränage och självmassage för att minska svullnad",
+      "Bygg enkla men effektiva ansiktsrutiner du kan göra dagligen",
+      "Se förbättringar i ton, lyft och hudens lyster med regelbunden träning",
+    ],
+    whoFor: [
+      "Alla som vill ha ett naturligt, icke-invasivt ansiktslyft",
+      "Personer med ansiktsspänningar, stress eller tidiga tecken på åldrande",
+      "Wellness-älskare som värdesätter självvård, mindfulness och kroppsmedvetenhet",
+      "Nybörjare och erfarna utövare – inga förkunskaper behövs",
+    ],
+    instructor: {
+      name: "Ivana Vujović",
+      bio: [
+        "Ivana Vujović är certifierad Mat & Reformer Pilates-instruktör, 500-timmars yogalärare (Hatha & Vinyasa) och certifierad Face Yoga-coach, med specialisering i ansiktslyft, ansiktsskulptering och buccal massage.",
+        "Hon har undervisat yoga, face yoga, pilates och yogilates i studio, retreats, offentliga och privata sammanhang sedan 2019 – i bland annat Stuttgart, Bali, Montenegro och Dubai.",
+      ],
+      credentials: [
+        "Yoga Loft Süd, Stuttgart (2023–nutid)",
+        "Undervisning i Stuttgart, kontors- och högskolemiljöer (2022–nutid)",
+        "Undervisning i Bali (2022)",
+        "Yoga Studio Podgorica, Montenegro (2021)",
+        "Onlineundervisning (2019–nutid)",
+        "Privata sessioner och strandyoga i Dubai (2019)",
+      ],
+      education: [
+        "Reformer Pilates Training, Body Athletica, Bali (2025)",
+        "Pilates Training, Stuttgart, Tyskland (2025)",
+        "Face Lift, Sculpt & Buccal Massage, Olivia Szmidt, Wien (2025)",
+        "Yogilates Training (online, 2024)",
+        "300h Yoga Teacher Training (Hatha & Vinyasa), Bali (2022)",
+        "200h Hatha Yoga Teacher Training, Rishikesh, Indien (2019)",
+        "Face Yoga Method, Fumiko Takatsu (online, 2019)",
+      ],
+    },
+    modules: [
+      {
+        title: "Modul 1: Ansiktstekniker – Natural Face Lift",
+        lessons: [
+          { title: "Face Scan", durationSeconds: 77 },
+          { title: "+X (Eye Rotation)", durationSeconds: 75 },
+          { title: "Frown Lines", durationSeconds: 57 },
+          { title: "Natural Botox", durationSeconds: 53 },
+          { title: "Face Lift – Forehead", durationSeconds: 66 },
+          { title: "Quick Face Lift", durationSeconds: 84 },
+          { title: "WOW", durationSeconds: 44 },
+          { title: "Stress Relief – Eyes", durationSeconds: 50 },
+          { title: "Fox", durationSeconds: 86 },
+          { title: "Koala Neck", durationSeconds: 49 },
+          { title: "Circle", durationSeconds: 88 },
+          { title: "Yum Yum", durationSeconds: 66 },
+          { title: "2 in 1", durationSeconds: 78 },
+          { title: "Super Cheeks", durationSeconds: 59 },
+          { title: "Yum Yum – Advanced", durationSeconds: 47 },
+          { title: "Super Boost", durationSeconds: 53 },
+          { title: "Super Boost – Advanced", durationSeconds: 44 },
+          { title: "Cheek Relaxation", durationSeconds: 43 },
+          { title: "Tapping", durationSeconds: 94 },
+          { title: "TMJ Relief", durationSeconds: 68 },
+          { title: "Swan Neck", durationSeconds: 57 },
+          { title: "Hot Tea", durationSeconds: 78 },
+          { title: "Love", durationSeconds: 69 },
+          { title: "Bonus: Side Nodding", durationSeconds: 62 },
+        ],
+      },
+      {
+        title: "Modul 2: Hela ansiktsträningen",
+        lessons: [
+          { title: "FaceLift – Upper face", durationSeconds: 911 },
+          { title: "FaceLift – Mid face", durationSeconds: 664 },
+          { title: "FaceLift – Lower face", durationSeconds: 697 },
+          { title: "Full FaceLift", durationSeconds: 632 },
+        ],
+      },
+      {
+        title: "Modul 3: Bonus – Massage & Gua Sha",
+        lessons: [
+          { title: "FaceLift & Detox Massage", durationSeconds: 415 },
+          { title: "Gua Sha Massage", durationSeconds: 929 },
+        ],
       },
     ],
   },
@@ -776,7 +904,31 @@ export const courses: Course[] = [
 ];
 
 export function getCourse(slug: string): Course | undefined {
-  return courses.find((c) => c.slug === slug);
+  const c = courses.find((x) => x.slug === slug);
+  return c ? mergeBunnyVideos(c) : undefined;
+}
+
+/** Apply Bunny GUIDs from data/course-videos.ts onto a course's modules. */
+function mergeBunnyVideos(c: Course): Course {
+  const map = courseVideos[c.slug];
+  if (!map || !c.modules) return c;
+  return {
+    ...c,
+    modules: c.modules.map((mod, mi) => ({
+      ...mod,
+      lessons: mod.lessons.map((l, li) => {
+        const hit = map.find((x) => x.m === mi && x.l === li);
+        return hit ? { ...l, videoId: hit.videoId } : l;
+      }),
+    })),
+  };
+}
+
+/** Total number of lessons regardless of whether the course is video, PDF, or text. */
+export function getLessonCount(c: Course): number {
+  if (c.modules) return c.modules.reduce((acc, m) => acc + m.lessons.length, 0);
+  if (c.videoLessons) return c.videoLessons.length;
+  return c.lessons?.length ?? 0;
 }
 
 export const categories = Array.from(new Set(courses.map((c) => c.category)));
