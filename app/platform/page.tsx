@@ -43,7 +43,7 @@ function CourseCard({ c, locked }: { c: Course; locked?: boolean }) {
   );
   return (
     <Link
-      href={locked ? "/plattform/konto" : `/plattform/kurs/${c.slug}`}
+      href={locked ? "/platform/account" : `/platform/course/${c.slug}`}
       className={cls}
     >
       {inner}
@@ -113,7 +113,7 @@ export default async function CatalogPage() {
         </h2>
         {!member && (
           <Link
-            href="/plattform/konto"
+            href="/platform/account"
             className="text-sm font-semibold text-rose hover:text-rose-dark"
           >
             Reactivate →

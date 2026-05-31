@@ -33,7 +33,7 @@ export default function LoginPage() {
       });
       const data = await res.json();
       if (res.ok && data.ok) {
-        router.push("/plattform");
+        router.push("/platform");
         router.refresh();
         return;
       }

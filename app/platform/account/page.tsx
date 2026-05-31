@@ -23,7 +23,7 @@ export default async function KontoPage() {
 
   return (
     <main className="container-narrow py-10">
-      <Link href="/plattform" className="text-sm font-medium text-rose hover:text-rose-dark">
+      <Link href="/platform" className="text-sm font-medium text-rose hover:text-rose-dark">
         ← Till kurserna
       </Link>
       <h1 className="mt-4 font-serif text-3xl font-bold text-ink">Mitt medlemskap</h1>

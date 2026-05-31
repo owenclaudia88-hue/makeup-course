@@ -37,7 +37,7 @@ export default function CheckoutForm({ paymentIntentId }: { paymentIntentId: str
       body: JSON.stringify({ paymentIntentId, email }),
     }).catch(() => {});
 
-    const returnUrl = `${window.location.origin}/tack?payment_intent=${encodeURIComponent(
+    const returnUrl = `${window.location.origin}/thanks?payment_intent=${encodeURIComponent(
       paymentIntentId
     )}`;
 

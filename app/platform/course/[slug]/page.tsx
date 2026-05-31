@@ -99,7 +99,7 @@ export default async function CoursePage({
   return (
     <main className="container-narrow py-10">
       <Link
-        href="/plattform"
+        href="/platform"
         className="text-sm font-medium text-rose hover:text-rose-dark"
       >
         ← All courses
@@ -128,7 +128,7 @@ export default async function CoursePage({
             Your membership isn't active right now. Reactivate to unlock all{" "}
             {membership.courses}+ courses again.
           </p>
-          <Link href="/plattform/konto" className="btn-primary mt-5">
+          <Link href="/platform/account" className="btn-primary mt-5">
             Manage membership
           </Link>
         </div>

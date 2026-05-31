@@ -10,7 +10,7 @@ export default function CtaButton({
   className?: string;
 }) {
   return (
-    <Link href="/kassa" className={`${large ? "btn-primary-lg" : "btn-primary"} ${className}`}>
+    <Link href="/checkout" className={`${large ? "btn-primary-lg" : "btn-primary"} ${className}`}>
       {children}
     </Link>
   );

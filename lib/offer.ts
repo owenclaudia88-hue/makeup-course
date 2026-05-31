@@ -101,7 +101,7 @@ export const membership = {
   // Stripe Price is created once via the API using this lookup_key, then reused.
   lookupKey: "lumora_membership_monthly_sek",
   // Where members are sent to access the platform.
-  platformUrl: process.env.NEXT_PUBLIC_LUMORA_PLATFORM_URL || "/plattform/logga-in",
+  platformUrl: process.env.NEXT_PUBLIC_LUMORA_PLATFORM_URL || "/platform/login",
 };
 
 /** Display price in the active currency (falls back to priceOre treated as SEK). */

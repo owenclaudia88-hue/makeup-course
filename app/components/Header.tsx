@@ -19,7 +19,7 @@ export default function Header() {
           </span>
         </Link>
         <Link
-          href="/kassa"
+          href="/checkout"
           className="rounded-full bg-rose px-4 py-2 text-sm font-semibold text-white shadow-soft transition hover:bg-rose-dark sm:px-5"
         >
           Get started · {formatPrice(price, currency)}

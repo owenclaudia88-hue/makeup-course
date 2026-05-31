@@ -64,6 +64,6 @@ export function getSession(): { email: string } | null {
 /** Use in a protected server component: redirects to login if not signed in. */
 export function requireSession(): { email: string } {
   const session = getSession();
-  if (!session) redirect("/plattform/logga-in");
+  if (!session) redirect("/platform/login");
   return session;
 }
