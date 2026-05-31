@@ -2,7 +2,6 @@ import Link from "next/link";
 import { brand, mainOffer, priceFor, mainDiscountPct } from "@/lib/offer";
 import { formatPrice } from "@/lib/currency";
 import { getCurrentCurrency } from "@/lib/currencyServer";
-import CurrencySwitcher from "./CurrencySwitcher";
 
 export default function Header() {
   const currency = getCurrentCurrency();
@@ -19,18 +18,15 @@ export default function Header() {
             {brand.tagline}
           </span>
         </Link>
-        <div className="flex items-center gap-3">
-          <CurrencySwitcher value={currency} />
-          <Link
-            href="/kassa"
-            className="rounded-full bg-rose px-4 py-2 text-sm font-semibold text-white shadow-soft transition hover:bg-rose-dark sm:px-5"
-          >
-            Get started · {formatPrice(price, currency)}
-            <span className="ml-1 hidden rounded-full bg-white/20 px-2 py-0.5 text-[11px] sm:inline">
-              -{mainDiscountPct()}%
-            </span>
-          </Link>
-        </div>
+        <Link
+          href="/kassa"
+          className="rounded-full bg-rose px-4 py-2 text-sm font-semibold text-white shadow-soft transition hover:bg-rose-dark sm:px-5"
+        >
+          Get started · {formatPrice(price, currency)}
+          <span className="ml-1 hidden rounded-full bg-white/20 px-2 py-0.5 text-[11px] sm:inline">
+            -{mainDiscountPct()}%
+          </span>
+        </Link>
       </div>
     </header>
   );
