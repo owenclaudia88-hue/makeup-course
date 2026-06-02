@@ -1,172 +1,207 @@
+import Link from "next/link";
 import Header from "./components/Header";
 import CtaButton from "./components/CtaButton";
-import Countdown from "./components/Countdown";
-import FbComments from "./components/FbComments";
 import SmartImg from "./components/SmartImg";
-import { brand, mainOffer, bonuses, membership, formatKr, mainDiscountPct, totalStackValueOre } from "@/lib/offer";
+import CourseCover from "./components/CourseCover";
+import {
+  brand,
+  membership,
+  membershipMonthlyPrice,
+} from "@/lib/offer";
+import { courses } from "@/lib/courses";
+import { getCurrentCurrency } from "@/lib/currencyServer";
+import { formatPrice } from "@/lib/currency";
 
-const lessons = [
+// Curated set shown on the homepage. Sampled across categories so visitors see
+// the breadth of the academy on first scroll.
+const FEATURED_SLUGS = [
+  "makeup40",
+  "natural-face-lift",
+  "ansiktsyoga",
+  "hudvard-40",
+  "battre-somn",
+  "lymfdetox-21",
+  "meditation-nyborjare",
+  "personlig-stil-40",
+];
+
+const CATEGORIES = [
+  {
+    name: "Beauty",
+    emoji: "💆‍♀️",
+    blurb: "Face yoga, skincare, lymph drainage, makeup that flatters mature skin.",
+  },
+  {
+    name: "Wellness",
+    emoji: "🌿",
+    blurb: "Sleep, stress, breathwork, meditation — small habits, big shifts.",
+  },
+  {
+    name: "Health",
+    emoji: "💪",
+    blurb: "Posture, mobility, mindful eating — care for the body underneath.",
+  },
+  {
+    name: "Personal growth",
+    emoji: "✨",
+    blurb: "Self-esteem, focus, digital detox — feel as good as you look.",
+  },
+  {
+    name: "Style",
+    emoji: "👗",
+    blurb: "Build a wardrobe that fits you, not last year's trends.",
+  },
+  {
+    name: "Masterclass",
+    emoji: "🎓",
+    blurb: "Deep-dive courses on the topics our members ask about most.",
+  },
+];
+
+const HOW_IT_WORKS = [
   {
     n: 1,
-    title: "Varför smink åldrar dig",
-    desc: "De 5 dolda misstagen som lägger på år – och varför mer produkt nästan alltid gör det värre.",
+    title: "Browse the library",
+    desc: "20+ courses across beauty, wellness, mindfulness, and personal growth. New ones added every month.",
   },
   {
     n: 2,
-    title: "Hudprep: grunden för varje look",
-    desc: "2-minutersrutinen med fukt, ögonkräm och primer som får allt annat att sitta i timmar.",
+    title: "Watch in 5–15 minutes",
+    desc: "Short, focused video lessons from real practitioners. No filler, no fluff — just what works.",
   },
   {
     n: 3,
-    title: "Foundation rätt – utan att kaka sig",
-    desc: "Rätt formel, rätt verktyg och placeringen som jämnar ut huden istället för att framhäva linjer.",
-  },
-  {
-    n: 4,
-    title: "Concealer-mästarklass",
-    desc: "Sudda bort mörka ringar och svullnad med rätt nyans och den omvända triangeln – på 60 sekunder.",
-  },
-  {
-    n: 5,
-    title: "Eye-lift-effekten",
-    desc: "Strategisk eyeliner och skuggplacering som öppnar och lyfter ögat – helt utan tung kantlinje.",
-  },
-  {
-    n: 6,
-    title: "Bryn som ramar in & föryngrar",
-    desc: "Den snabbaste enskilda förändringen som föryngrar ansiktet. Fyll mjukt, aldrig ritat.",
-  },
-  {
-    n: 7,
-    title: "Rouge, bronzer & highlight för 40+",
-    desc: "Var moget hud behöver färg och ljus – och var det definitivt inte ska placeras.",
-  },
-  {
-    n: 8,
-    title: "Läppar som inte blöder eller plattas till",
-    desc: "Liner-tricket, formlerna och volymillusionen som ger fyllighet istället för ålder.",
-  },
-  {
-    n: 9,
-    title: "Din kompletta 10-minutersrutin",
-    desc: "Allt på plats: verktyg, ordning, timing och finish – steg för steg, minut för minut.",
+    title: "Make it stick",
+    desc: "Daily streaks, mark-complete progress, and a private notebook turn watching into doing.",
   },
 ];
 
-const routine = [
-  ["1–2 min", "Prep", "Fukt, ögonkräm, lysande primer. Låt sjunka in medan du dukar fram."],
-  ["2–3 min", "Foundation", "Fuktad svamp, tunt lager, tryck utåt från mitten. Andra lagret bara där det behövs."],
-  ["3–4 min", "Concealer", "Färgkorrigera vid behov. Omvänd triangel under ögat. Stippla och blanda."],
-  ["4–5 min", "Bryn", "Fyll glesa partier med mjuk penna. Sätt uppåt med brynsgel."],
-  ["5–6 min", "Ögon", "Varm skugga på locket. Yttre V. Highlight i inre ögonvrån. Liner nära fransraden."],
-  ["6–7 min", "Rouge", "Krämrouge på kindernas äpplen, blandad uppåt. Bronzer lätt där solen träffar."],
-  ["7–8 min", "Highlight", "Kindben, inre ögonvrår, amorbåge."],
-  ["8–9 min", "Läppar", "Ifylld liner. Satinläppstift. En droppe gloss i mitten."],
-  ["9–10 min", "Kontroll", "Kolla i dagsljus. Blanda kanter. Transparent puder bara på glansiga zoner."],
+const TESTIMONIALS = [
+  {
+    quote:
+      "I never thought 5 minutes a day could make this much difference. My skin glows, my jaw is less tense, and I actually look forward to my morning ritual.",
+    name: "Sarah K.",
+    meta: "47 · New York",
+  },
+  {
+    quote:
+      "The face yoga lessons gave me a lift I couldn't get from any cream. I'm hooked — and now I'm working through the lymph drainage course too.",
+    name: "Maria L.",
+    meta: "52 · London",
+  },
+  {
+    quote:
+      "I bought the makeup masterclass and stayed for everything else. The streaks and progress tracking are what finally made me consistent.",
+    name: "Linda P.",
+    meta: "44 · Sydney",
+  },
+  {
+    quote:
+      "Worth every dollar. Video makes it so easy to actually do the practice — not just read about it and forget by lunchtime.",
+    name: "Emma R.",
+    meta: "39 · Toronto",
+  },
 ];
 
-// Testimonials now live in app/components/FbComments.tsx (rolling FB-style).
-
-const faqs = [
+const FAQS = [
   {
-    q: "Hur får jag tillgång till kursen?",
-    a: "Direkt efter betalning får du den som nedladdningsbar PDF – på tacksidan och via mejl. Den är din för alltid.",
+    q: "What exactly is the Luumora Academy membership?",
+    a: "One subscription, the whole library. 20+ courses across beauty, wellness, health, personal growth, and style — plus new courses added every month. Stream from any device, track your progress, and cancel any time.",
   },
   {
-    q: "Funkar det för min ålder och hudtyp?",
-    a: "Hela kursen är byggd för moget hud, 40+. Teknikerna utgår från hur huden faktiskt förändras med åren.",
+    q: "Can I really cancel anytime?",
+    a: "Yes. One click in your account page. No phone calls, no friction, no questions asked. If you cancel during the 3-day free trial you won't be charged at all.",
   },
   {
-    q: "Behöver jag köpa dyra produkter?",
-    a: "Nej. Det handlar om teknik och placering – principerna fungerar med de produkter du redan har hemma.",
+    q: "Do I need any equipment or products?",
+    a: "Not really. Most courses use just your hands. A few suggest a Gua Sha tool, a yoga mat, or a basic skincare routine — but the techniques work with what you already own.",
   },
   {
-    q: "Vad ingår?",
-    a: "9 djupgående lektioner, proffstips, do's & don'ts samt checklistor för varje steg och en komplett 10-minutersrutin.",
+    q: "What if I'm not satisfied?",
+    a: "30-day money-back guarantee on every paid course. Email us within 30 days and we'll refund you. No back-and-forth.",
   },
   {
-    q: "Kan jag få pengarna tillbaka?",
-    a: "Ja. Är du inte nöjd inom 30 dagar mejlar du oss så får du pengarna tillbaka – inga krångliga frågor.",
+    q: "How is this different from free YouTube videos?",
+    a: "Curated, structured, and finishable. Every course is built as a real program with modules, durations, progress tracking, and an expert instructor — not a random algorithm rabbit hole. You learn faster and you actually finish.",
+  },
+  {
+    q: "If I buy a single course, do I keep it forever?",
+    a: "Yes. Any course you purchase outright is yours for life — even if you cancel your membership. The other courses in the library stay available as long as your membership is active.",
   },
 ];
 
 function Stars({ n = 5 }: { n?: number }) {
   return (
-    <span className="text-gold" aria-label={`${n} av 5 stjärnor`}>
+    <span className="text-gold" aria-label={`${n} out of 5 stars`}>
       {"★".repeat(n)}
     </span>
   );
 }
 
-// Image slots use <SmartImg /> — drop your files into /public (see public/README.txt).
-
-export default function Page() {
-  const reg = mainOffer.regularPriceOre ?? 0;
+export default function Home() {
+  const currency = getCurrentCurrency();
+  const memberPrice = membershipMonthlyPrice(currency);
+  const featured = FEATURED_SLUGS.map((s) => courses.find((c) => c.slug === s)).filter(
+    (c): c is NonNullable<typeof c> => !!c,
+  );
 
   return (
     <main>
       <Header />
 
-      {/* HERO */}
+      {/* ───────── HERO ───────── */}
       <section className="relative overflow-hidden bg-gradient-to-b from-blush/60 to-cream">
-        <div className="container-tight grid items-center gap-10 py-12 sm:py-16 lg:grid-cols-2 lg:py-20">
+        <div className="container-tight grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-2">
           <div className="animate-fade-up">
-            <p className="eyebrow mb-4">För kvinnor 40+</p>
-            <h1 className="font-serif text-4xl font-bold leading-[1.08] text-ink sm:text-5xl lg:text-6xl">
-              Se 10 år yngre ut <span className="text-rose">— på 10 minuter</span> om dagen
+            <p className="eyebrow mb-4">{brand.name} Academy</p>
+            <h1 className="font-serif text-4xl font-bold leading-[1.05] text-ink sm:text-5xl lg:text-6xl">
+              Daily rituals for a <span className="text-rose">glowing life.</span>
             </h1>
             <p className="mt-5 max-w-xl text-lg text-muted">
-              Den kompletta proffsguiden till en fräschare, ljusare och mer självsäker look. Utan
-              dyra produkter och utan timmar framför spegeln.
+              Short, expert-led video courses on face yoga, skincare, lymph drainage,
+              mindfulness, style, and more — practiced in 5 to 15 minutes a day.
             </p>
 
             <div className="mt-6 flex items-center gap-3">
               <Stars />
               <span className="text-sm font-medium text-muted">
-                Använd av 16&nbsp;000+ kvinnor världen över
+                Loved by 16,000+ members worldwide
               </span>
             </div>
 
-            <div className="mt-7 flex flex-wrap items-end gap-4">
-              <div className="flex items-baseline gap-3">
-                <span className="text-lg text-muted line-through">{formatKr(reg)}</span>
-                <span className="font-serif text-5xl font-bold text-rose-dark">
-                  {formatKr(mainOffer.priceOre)}
-                </span>
-              </div>
-              <span className="rounded-full bg-rose px-3 py-1 text-sm font-bold text-white">
-                Spara {mainDiscountPct()}%
-              </span>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <CtaButton large>Start your free 3-day trial →</CtaButton>
+              <Link
+                href="#courses"
+                className="rounded-full border border-blush bg-white px-6 py-3 text-sm font-semibold text-ink shadow-soft transition hover:border-rose hover:text-rose"
+              >
+                Browse the library
+              </Link>
             </div>
-
-            <div className="mt-6">
-              <CtaButton large>Ja, jag vill ha kursen för {formatKr(mainOffer.priceOre)} →</CtaButton>
-              <p className="mt-3 text-sm text-muted">
-                ⏳ Introduktionspriset gäller idag i <Countdown /> · Säker betalning ·
-                Direkt nedladdning
-              </p>
-            </div>
+            <p className="mt-3 text-sm text-muted">
+              Then {formatPrice(memberPrice, currency)}/mo · Cancel anytime · 30-day money-back guarantee
+            </p>
           </div>
 
           <div className="animate-fade-up">
             <SmartImg
               src="/hero.jpg"
-              alt="10 Min Makeup 40+ – se 10 år yngre ut på 10 minuter"
-              label="Hjältebild (public/hero.jpg)"
-              className="aspect-[16/9] w-full"
+              alt="Luumora Academy — daily wellness and beauty rituals"
+              label="Hero image (public/hero.jpg)"
+              className="aspect-[5/4] w-full"
             />
           </div>
         </div>
       </section>
 
-      {/* SOCIAL PROOF BAR */}
+      {/* ───────── TRUST BAR ───────── */}
       <section className="border-y border-blush bg-white">
         <div className="container-tight grid grid-cols-2 gap-6 py-6 text-center sm:grid-cols-4">
           {[
-            ["16 000+", "kvinnor"],
-            ["9", "lektioner"],
-            ["10 min", "om dagen"],
-            ["4,9 / 5", "i snittbetyg"],
+            ["16,000+", "members"],
+            [`${courses.length}+`, "courses"],
+            ["5–15 min", "per day"],
+            ["4.9 / 5", "average rating"],
           ].map(([big, small]) => (
             <div key={small}>
               <div className="font-serif text-2xl font-bold text-rose-dark">{big}</div>
@@ -176,221 +211,145 @@ export default function Page() {
         </div>
       </section>
 
-      {/* PROBLEM */}
+      {/* ───────── HOW IT WORKS ───────── */}
       <section className="py-16 sm:py-20">
         <div className="container-narrow text-center">
-          <p className="eyebrow mb-3">Känner du igen dig?</p>
+          <p className="eyebrow mb-3">How it works</p>
           <h2 className="font-serif text-3xl font-bold text-ink sm:text-4xl">
-            Sminket som funkade förr verkar plötsligt jobba emot dig
-          </h2>
-        </div>
-        <div className="container-tight mt-10 grid gap-4 sm:grid-cols-2">
-          {[
-            "Foundationen lägger sig i fina linjer och ser kletig ut redan efter en timme.",
-            "Ögonen ser tröttare och mindre ut – trots att du drar eyeliner.",
-            "Ju mer du lägger på för att dölja, desto äldre ser du ut.",
-            "Läppstiftet ”blöder” ut i de små linjerna runt munnen.",
-          ].map((t) => (
-            <div key={t} className="card flex items-start gap-3 p-5">
-              <span className="mt-0.5 text-rose">✕</span>
-              <p className="text-muted">{t}</p>
-            </div>
-          ))}
-        </div>
-        <p className="container-narrow mt-8 text-center text-lg font-medium text-ink">
-          Problemet är inte du. Det är att nästan allt vi lärde oss om smink slutar fungera efter
-          40 — och ingen berättade vad man ska göra istället.
-        </p>
-      </section>
-
-      {/* SOLUTION */}
-      <section className="bg-white py-16 sm:py-20">
-        <div className="container-tight grid items-center gap-10 lg:grid-cols-2">
-          <SmartImg
-            src="/instruktor.jpg"
-            alt="Proffs-makeupartist visar 10-minutersrutinen"
-            label="Instruktör (public/instruktor.jpg)"
-            className="aspect-[4/3] w-full"
-          />
-          <div>
-            <p className="eyebrow mb-3">Lösningen</p>
-            <h2 className="font-serif text-3xl font-bold text-ink sm:text-4xl">
-              Mindre produkt. Rätt placerad. Med rätt finish.
-            </h2>
-            <p className="mt-4 text-muted">
-              Erfarna makeupartister som jobbar med kvinnor 40+ säger samma sak: korrigeringen är
-              nästan alltid att <strong>ta bort</strong>, inte lägga till. {brand.name} samlar exakt
-              de teknikerna i en enda kurs – och sätter ihop dem till en rutin du gör på 10 minuter.
-            </p>
-            <ul className="mt-6 space-y-3">
-              {[
-                "Proffstekniker anpassade efter moget hud – inte 20-årsregler",
-                "Steg-för-steg, så att du vet exakt vad du ska göra och varför",
-                "En repeterbar 10-minutersrutin du kan göra varje morgon",
-              ].map((t) => (
-                <li key={t} className="flex items-start gap-3">
-                  <span className="mt-0.5 font-bold text-rose">✓</span>
-                  <span className="text-ink">{t}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* CURRICULUM */}
-      <section className="py-16 sm:py-20">
-        <div className="container-narrow text-center">
-          <p className="eyebrow mb-3">Det här lär du dig</p>
-          <h2 className="font-serif text-3xl font-bold text-ink sm:text-4xl">
-            9 lektioner – hela vägen från bar hud till färdig look
-          </h2>
-        </div>
-        <div className="container-tight mt-10 grid gap-4 md:grid-cols-2">
-          {lessons.map((l) => (
-            <div key={l.n} className="card flex gap-4 p-5">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose font-serif text-lg font-bold text-white">
-                {l.n}
-              </div>
-              <div>
-                <h3 className="font-semibold text-ink">{l.title}</h3>
-                <p className="mt-1 text-sm text-muted">{l.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ROUTINE TABLE */}
-      <section className="bg-white py-16 sm:py-20">
-        <div className="container-narrow text-center">
-          <p className="eyebrow mb-3">Allt på plats</p>
-          <h2 className="font-serif text-3xl font-bold text-ink sm:text-4xl">
-            Din kompletta 10-minutersrutin
-          </h2>
-          <p className="mt-3 text-muted">Minut för minut – samma rutin proffsen använder, anpassad för dig.</p>
-        </div>
-        <div className="container-tight mt-10 overflow-hidden rounded-2xl border border-blush">
-          {routine.map((r, i) => (
-            <div
-              key={r[0]}
-              className={`grid grid-cols-[80px_1fr] items-start gap-3 px-4 py-4 sm:grid-cols-[110px_140px_1fr] sm:px-6 ${
-                i % 2 ? "bg-cream" : "bg-white"
-              }`}
-            >
-              <span className="font-semibold text-rose">{r[0]}</span>
-              <span className="hidden font-semibold text-ink sm:block">{r[1]}</span>
-              <span className="text-muted">
-                <span className="font-semibold text-ink sm:hidden">{r[1]}: </span>
-                {r[2]}
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* TESTIMONIALS — Facebook-style, auto-rolling */}
-      <FbComments />
-
-      {/* BONUSES */}
-      <section className="bg-white py-16 sm:py-20">
-        <div className="container-narrow text-center">
-          <p className="eyebrow mb-3">Ingår gratis idag</p>
-          <h2 className="font-serif text-3xl font-bold text-ink sm:text-4xl">
-            {bonuses.length} bonusguider på köpet — 0 kr extra
+            A library that's actually built to be used
           </h2>
           <p className="mt-3 text-muted">
-            Värde {formatKr(bonuses.reduce((s, b) => s + (b.regularPriceOre ?? 0), 0))} — idag helt
-            utan kostnad när du startar för {formatKr(mainOffer.priceOre)}.
+            Most online courses get abandoned. Luumora is designed differently — short
+            lessons, daily nudges, and progress that compounds.
           </p>
         </div>
         <div className="container-tight mt-10 grid gap-5 md:grid-cols-3">
-          {bonuses.map((b) => (
-            <div key={b.id} className="card relative flex flex-col p-6">
-              <span className="absolute right-4 top-4 rounded-full bg-rose px-2.5 py-1 text-xs font-bold text-white">
-                BONUS
-              </span>
-              <span className="text-3xl">🎁</span>
-              <h3 className="mt-3 font-serif text-lg font-bold text-ink">{b.name}</h3>
-              <p className="mt-2 grow text-sm text-muted">{b.blurb}</p>
-              <p className="mt-4 text-sm">
-                <span className="text-muted line-through">{formatKr(b.regularPriceOre ?? 0)}</span>{" "}
-                <span className="font-bold text-rose-dark">idag 0 kr</span>
-              </p>
+          {HOW_IT_WORKS.map((step) => (
+            <div key={step.n} className="card flex flex-col gap-3 p-6">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-rose font-serif text-lg font-bold text-white">
+                {step.n}
+              </div>
+              <h3 className="font-serif text-lg font-bold text-ink">{step.title}</h3>
+              <p className="text-sm text-muted">{step.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* OFFER */}
-      <section id="erbjudande" className="bg-gradient-to-b from-cream to-blush/60 py-16 sm:py-20">
+      {/* ───────── CATEGORIES ───────── */}
+      <section className="bg-white py-16 sm:py-20">
+        <div className="container-narrow text-center">
+          <p className="eyebrow mb-3">Six worlds, one membership</p>
+          <h2 className="font-serif text-3xl font-bold text-ink sm:text-4xl">
+            Explore by what your day needs
+          </h2>
+        </div>
+        <div className="container-tight mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {CATEGORIES.map((c) => (
+            <div key={c.name} className="card flex items-start gap-4 p-5">
+              <span className="text-3xl" aria-hidden>
+                {c.emoji}
+              </span>
+              <div>
+                <h3 className="font-serif text-lg font-bold text-ink">{c.name}</h3>
+                <p className="mt-1 text-sm text-muted">{c.blurb}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ───────── FEATURED COURSES ───────── */}
+      <section id="courses" className="py-16 sm:py-20">
+        <div className="container-narrow text-center">
+          <p className="eyebrow mb-3">A taste of the library</p>
+          <h2 className="font-serif text-3xl font-bold text-ink sm:text-4xl">
+            Just a few of the courses inside
+          </h2>
+          <p className="mt-3 text-muted">
+            From a 30-lesson face yoga program to a 5-minute morning ritual — pick what
+            calls to you today, switch tomorrow.
+          </p>
+        </div>
+        <div className="container-tight mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {featured.map((c) => (
+            <div key={c.slug} className="card group flex flex-col overflow-hidden p-0 transition hover:border-rose">
+              <CourseCover slug={c.slug} title={c.title} className="aspect-[16/10] w-full" />
+              <div className="flex grow flex-col p-4">
+                <span className="text-[11px] font-semibold uppercase tracking-wide text-rose">
+                  {c.category}
+                </span>
+                <h3 className="mt-1.5 font-serif text-base font-bold leading-snug text-ink">
+                  {c.title}
+                </h3>
+                <p className="mt-1.5 grow text-xs text-muted">{c.summary}</p>
+                <span className="mt-3 text-[11px] font-medium text-muted">
+                  {c.minutesPerDay} min/day · {c.level}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="container-narrow mt-10 text-center">
+          <CtaButton large>Start your free 3-day trial →</CtaButton>
+          <p className="mt-3 text-sm text-muted">
+            Full access to all {courses.length}+ courses, instantly.
+          </p>
+        </div>
+      </section>
+
+      {/* ───────── MEMBERSHIP PRICING ───────── */}
+      <section className="bg-gradient-to-b from-cream to-blush/60 py-16 sm:py-20">
         <div className="container-narrow">
           <div className="card overflow-hidden p-0">
             <div className="bg-rose px-6 py-4 text-center text-white">
               <p className="text-sm font-semibold uppercase tracking-wide">
-                Introduktionserbjudande · gäller idag
+                One membership, the whole library
               </p>
             </div>
-            <div className="p-6 sm:p-8">
-              <h2 className="text-center font-serif text-3xl font-bold text-ink">
-                {mainOffer.name}
+            <div className="p-6 sm:p-10">
+              <h2 className="text-center font-serif text-3xl font-bold text-ink sm:text-4xl">
+                Everything inside, every day
               </h2>
+              <p className="mx-auto mt-3 max-w-lg text-center text-muted">
+                {courses.length}+ courses, new ones added monthly, progress tracking, and a
+                private notebook — all for less than a single in-person class.
+              </p>
 
-              <ul className="mx-auto mt-6 max-w-md space-y-2.5">
-                <li className="flex items-center justify-between gap-3">
-                  <span className="text-ink">
-                    <span className="mr-1 font-bold text-rose">✓</span> Hela mästarkursen – 9
-                    lektioner
-                  </span>
-                  <span className="shrink-0 text-sm text-muted line-through">{formatKr(reg)}</span>
-                </li>
-                {bonuses.map((b) => (
-                  <li key={b.id} className="flex items-center justify-between gap-3">
-                    <span className="text-ink">
-                      <span className="mr-1">🎁</span> {b.name.split(":")[0]}{" "}
-                      <span className="text-xs font-semibold text-rose">(bonus)</span>
-                    </span>
-                    <span className="shrink-0 text-sm text-muted line-through">
-                      {formatKr(b.regularPriceOre ?? 0)}
-                    </span>
+              <ul className="mx-auto mt-8 max-w-md space-y-2.5">
+                {[
+                  `All ${courses.length}+ courses — beauty, wellness, health, growth, style`,
+                  "New courses added every month",
+                  "Watch on any device — phone, tablet, laptop, TV",
+                  "Streaks, progress tracking & private notebook",
+                  "Cancel anytime — keep what you've purchased forever",
+                ].map((b) => (
+                  <li key={b} className="flex items-start gap-3 text-ink">
+                    <span className="mt-0.5 font-bold text-rose">✓</span>
+                    <span>{b}</span>
                   </li>
                 ))}
-                <li className="mt-1 flex items-center justify-between gap-3 border-t border-blush pt-3">
-                  <span className="font-semibold text-ink">Totalt värde</span>
-                  <span className="shrink-0 font-semibold text-muted line-through">
-                    {formatKr(totalStackValueOre())}
-                  </span>
-                </li>
               </ul>
 
-              <div className="mt-8 text-center">
-                <div className="flex items-end justify-center gap-3">
-                  <span className="text-xl text-muted line-through">{formatKr(totalStackValueOre())}</span>
+              <div className="mt-10 text-center">
+                <p className="text-sm font-semibold uppercase tracking-wide text-rose">
+                  3 days free, then
+                </p>
+                <div className="mt-1 flex items-baseline justify-center gap-2">
                   <span className="font-serif text-6xl font-bold text-rose-dark">
-                    {formatKr(mainOffer.priceOre)}
+                    {formatPrice(memberPrice, currency)}
                   </span>
+                  <span className="text-lg text-muted">/ month</span>
                 </div>
-                <p className="mt-1 text-sm text-muted">
-                  Allt ovan ingår · engångsbetalning · ingen prenumeration.
+                <p className="mt-2 text-sm text-muted">
+                  Cancel anytime · billed monthly · 30-day money-back guarantee
                 </p>
 
                 <div className="mx-auto mt-6 max-w-md">
-                  <CtaButton large>Lås upp kursen för {formatKr(mainOffer.priceOre)} →</CtaButton>
+                  <CtaButton large>Start your free trial →</CtaButton>
                 </div>
-                <p className="mt-3 text-sm text-muted">
-                  🔒 Säker betalning · 30 dagars pengarna-tillbaka-garanti
-                </p>
-              </div>
-
-              <div className="mt-8 space-y-2 rounded-xl bg-cream p-4 text-center text-sm text-muted">
-                <p>
-                  <span className="font-semibold text-ink">Ingår idag:</span> {bonuses.length}{" "}
-                  bonusguider gratis + {membership.trialDays} dagars provtillgång till{" "}
-                  {membership.name} ({membership.courses}+ kurser).
-                </p>
-                <p className="text-xs">
-                  Provperioden övergår till {formatKr(membership.monthlyPriceOre)}/mån efter{" "}
-                  {membership.trialDays} dagar om du inte avslutar. Avsluta när som helst.
+                <p className="mt-3 text-xs text-muted">
+                  🔒 Secure payment · powered by Stripe
                 </p>
               </div>
             </div>
@@ -398,31 +357,35 @@ export default function Page() {
         </div>
       </section>
 
-      {/* GUARANTEE */}
-      <section className="bg-white py-14">
-        <div className="container-narrow flex flex-col items-center gap-5 text-center sm:flex-row sm:text-left">
-          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full border-2 border-gold font-serif text-sm font-bold text-gold">
-            30 DAGAR
-          </div>
-          <div>
-            <h3 className="font-serif text-2xl font-bold text-ink">Nöjd-kund-garanti</h3>
-            <p className="mt-2 text-muted">
-              Testa hela kursen i lugn och ro. Om du inte ser skillnad inom 30 dagar mejlar du oss på{" "}
-              <span className="font-medium text-ink">{brand.supportEmail}</span> så får du pengarna
-              tillbaka. Hela risken är vår.
-            </p>
-          </div>
+      {/* ───────── TESTIMONIALS ───────── */}
+      <section className="bg-white py-16 sm:py-20">
+        <div className="container-narrow text-center">
+          <p className="eyebrow mb-3">From our members</p>
+          <h2 className="font-serif text-3xl font-bold text-ink sm:text-4xl">
+            Real results, real routines
+          </h2>
+        </div>
+        <div className="container-tight mt-10 grid gap-5 md:grid-cols-2">
+          {TESTIMONIALS.map((t) => (
+            <figure key={t.name} className="card flex flex-col gap-3 p-6">
+              <Stars />
+              <blockquote className="text-ink">"{t.quote}"</blockquote>
+              <figcaption className="text-sm font-semibold text-muted">
+                — {t.name}, {t.meta}
+              </figcaption>
+            </figure>
+          ))}
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* ───────── FAQ ───────── */}
       <section className="py-16 sm:py-20">
         <div className="container-narrow">
           <h2 className="text-center font-serif text-3xl font-bold text-ink sm:text-4xl">
-            Vanliga frågor
+            Questions, answered
           </h2>
           <div className="mt-8 space-y-3">
-            {faqs.map((f) => (
+            {FAQS.map((f) => (
               <details key={f.q} className="card group p-5">
                 <summary className="flex cursor-pointer list-none items-center justify-between font-semibold text-ink">
                   {f.q}
@@ -432,26 +395,33 @@ export default function Page() {
               </details>
             ))}
           </div>
-
           <div className="mt-10 text-center">
-            <CtaButton large>Kom igång nu för {formatKr(mainOffer.priceOre)} →</CtaButton>
+            <CtaButton large>Start your free 3-day trial →</CtaButton>
+            <p className="mt-3 text-sm text-muted">
+              {membership.trialDays}-day free trial · {formatPrice(memberPrice, currency)}/mo after · cancel anytime
+            </p>
           </div>
         </div>
       </section>
 
-      {/* FOOTER */}
+      {/* ───────── FOOTER ───────── */}
       <footer className="border-t border-blush bg-white py-10">
         <div className="container-tight text-center text-sm text-muted">
-          <p className="font-serif text-lg font-bold text-rose-dark">{brand.name}</p>
+          <p className="font-serif text-lg font-bold text-rose-dark">{brand.name} Academy</p>
           <p className="mt-2">{brand.tagline}</p>
           <div className="mt-4 flex flex-wrap justify-center gap-x-5 gap-y-2">
-            <a href="#" className="hover:text-rose">Integritetspolicy</a>
-            <a href="#" className="hover:text-rose">Villkor</a>
-            <a href={`mailto:${brand.supportEmail}`} className="hover:text-rose">Kontakt</a>
+            <Link href="/platform/login" className="hover:text-rose">
+              Sign in
+            </Link>
+            <a href="#" className="hover:text-rose">Privacy</a>
+            <a href="#" className="hover:text-rose">Terms</a>
+            <a href={`mailto:${brand.supportEmail}`} className="hover:text-rose">
+              Contact
+            </a>
           </div>
           <p className="mx-auto mt-6 max-w-xl text-xs text-muted/80">
-            Resultat varierar från person till person. {brand.name} tillhandahåller utbildande
-            innehåll om sminkteknik och garanterar inte specifika resultat. © {new Date().getFullYear()}{" "}
+            Results vary from person to person. {brand.name} provides educational content
+            and does not guarantee specific outcomes. © {new Date().getFullYear()}{" "}
             {brand.name}.
           </p>
         </div>
