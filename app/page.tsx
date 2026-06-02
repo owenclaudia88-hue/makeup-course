@@ -185,9 +185,9 @@ export default function Home() {
 
           <div className="animate-fade-up">
             <SmartImg
-              src="/hero.jpg"
+              src="/hero.png"
               alt="Luumora Academy — daily wellness and beauty rituals"
-              label="Hero image (public/hero.jpg)"
+              label="Hero image (public/hero.png)"
               className="aspect-[5/4] w-full"
             />
           </div>
