@@ -1,40 +1,42 @@
 import Link from "next/link";
 import { requireSession } from "@/lib/auth";
 import { getMembershipStatus } from "@/lib/access";
-import { membership, formatKr, brand } from "@/lib/offer";
+import { membership, brand, membershipMonthlyPrice } from "@/lib/offer";
+import { getCurrentCurrency } from "@/lib/currencyServer";
+import { formatPrice } from "@/lib/currency";
 import SubscriptionActions from "../../components/SubscriptionActions";
 
 export const dynamic = "force-dynamic";
 
-function svDate(ts?: number): string {
+function fmtDate(ts?: number): string {
   if (!ts) return "";
-  return new Date(ts * 1000).toLocaleDateString("sv-SE", {
+  return new Date(ts * 1000).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
 }
 
-export default async function KontoPage() {
+export default async function AccountPage() {
   const session = requireSession();
   const s = await getMembershipStatus(session.email);
-
-  const price = formatKr(membership.monthlyPriceOre);
+  const currency = getCurrentCurrency();
+  const price = formatPrice(membershipMonthlyPrice(currency), currency);
 
   return (
     <main className="container-narrow py-10">
       <Link href="/platform" className="text-sm font-medium text-rose hover:text-rose-dark">
-        ← Till kurserna
+        ← Back to library
       </Link>
-      <h1 className="mt-4 font-serif text-3xl font-bold text-ink">Mitt medlemskap</h1>
-      <p className="mt-1 text-muted">Inloggad som {session.email}</p>
+      <h1 className="mt-4 font-serif text-3xl font-bold text-ink">My membership</h1>
+      <p className="mt-1 text-muted">Signed in as {session.email}</p>
 
       <div className="card mt-6 p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="font-serif text-xl font-bold text-ink">{membership.name}</p>
             <p className="text-sm text-muted">
-              {price}/månad · tillgång till {membership.courses}+ kurser
+              {price}/mo · access to {membership.courses}+ courses
             </p>
           </div>
           {s.found && s.status && (
@@ -50,36 +52,38 @@ export default async function KontoPage() {
               }`}
             >
               {s.cancelAtPeriodEnd
-                ? "Avslutas"
+                ? "Ending"
                 : s.status === "trialing"
-                  ? "Provperiod"
+                  ? "Free trial"
                   : s.status === "active"
-                    ? "Aktiv"
+                    ? "Active"
                     : s.status === "past_due"
-                      ? "Betalning misslyckades"
-                      : "Avslutat"}
+                      ? "Payment failed"
+                      : "Canceled"}
             </span>
           )}
         </div>
 
         <div className="mt-5 border-t border-blush pt-5 text-sm">
           {!s.found && (
-            <p className="text-muted">Vi hittar inget medlemskap kopplat till din e-post.</p>
+            <p className="text-muted">
+              We can't find a membership tied to this email.
+            </p>
           )}
 
           {s.found && s.status === "trialing" && (
             <>
               <p className="text-2xl font-bold text-rose-dark">
-                {s.trialDaysLeft} {s.trialDaysLeft === 1 ? "dag" : "dagar"} kvar av provperioden
+                {s.trialDaysLeft} {s.trialDaysLeft === 1 ? "day" : "days"} left of your free trial
               </p>
               {s.cancelAtPeriodEnd ? (
                 <p className="mt-2 text-muted">
-                  Ditt medlemskap avslutas {svDate(s.trialEnd)} och du kommer inte att debiteras.
+                  Your trial ends {fmtDate(s.trialEnd)} and you won't be charged.
                 </p>
               ) : (
                 <p className="mt-2 text-muted">
-                  Provperioden slutar {svDate(s.trialEnd)}. Därefter förnyas medlemskapet till{" "}
-                  {price}/månad om du inte avslutar innan dess.
+                  Your trial ends {fmtDate(s.trialEnd)}. After that your membership renews at{" "}
+                  {price}/month unless you cancel first.
                 </p>
               )}
             </>
@@ -89,12 +93,11 @@ export default async function KontoPage() {
             <>
               {s.cancelAtPeriodEnd ? (
                 <p className="text-muted">
-                  Ditt medlemskap avslutas {svDate(s.currentPeriodEnd)}. Du har tillgång fram till
-                  dess.
+                  Your membership ends {fmtDate(s.currentPeriodEnd)}. You have access until then.
                 </p>
               ) : (
                 <p className="text-muted">
-                  Aktivt medlemskap. Nästa betalning {svDate(s.currentPeriodEnd)}: {price}.
+                  Active membership. Next payment {fmtDate(s.currentPeriodEnd)}: {price}.
                 </p>
               )}
             </>
@@ -102,13 +105,13 @@ export default async function KontoPage() {
 
           {s.found && s.status === "past_due" && (
             <p className="text-rose-dark">
-              Senaste betalningen misslyckades. Uppdatera ditt kort för att behålla tillgången, eller
-              kontakta {brand.supportEmail}.
+              Your last payment failed. Update your card to keep your access, or contact us at{" "}
+              {brand.supportEmail}.
             </p>
           )}
 
           {s.found && !["trialing", "active", "past_due"].includes(s.status || "") && (
-            <p className="text-muted">Ditt medlemskap är avslutat.</p>
+            <p className="text-muted">Your membership is canceled.</p>
           )}
 
           {s.canManage && <SubscriptionActions cancelAtPeriodEnd={!!s.cancelAtPeriodEnd} />}
@@ -116,7 +119,7 @@ export default async function KontoPage() {
       </div>
 
       <p className="mt-4 text-center text-xs text-muted">
-        Du kan avsluta när som helst – inga bindningstider. Frågor? {brand.supportEmail}
+        Cancel anytime — no commitments. Questions? {brand.supportEmail}
       </p>
     </main>
   );

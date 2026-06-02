@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { getStripe } from "@/lib/stripe";
 import { ensureMembershipSubscription } from "@/lib/membership";
-import { formatKr, brand, membership } from "@/lib/offer";
+import { formatKr, brand, membership, membershipMonthlyPrice } from "@/lib/offer";
+import { getCurrentCurrency } from "@/lib/currencyServer";
+import { formatPrice } from "@/lib/currency";
 import PurchaseEvent from "../components/PurchaseEvent";
 
 export const dynamic = "force-dynamic";
 
-export default async function TackPage({
+export default async function ThanksPage({
   searchParams,
 }: {
   searchParams: { payment_intent?: string };
@@ -33,7 +35,9 @@ export default async function TackPage({
     }
   }
 
-  const signupHref = `/plattform/logga-in?ny=1${email ? `&email=${encodeURIComponent(email)}` : ""}`;
+  const signupHref = `/platform/login?ny=1${email ? `&email=${encodeURIComponent(email)}` : ""}`;
+  const currency = getCurrentCurrency();
+  const monthly = formatPrice(membershipMonthlyPrice(currency), currency);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-blush/50 to-cream px-5 py-16">
@@ -45,40 +49,40 @@ export default async function TackPage({
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-rose text-3xl text-white">
               ✓
             </div>
-            <h1 className="mt-5 font-serif text-3xl font-bold text-ink">Tack för ditt köp!</h1>
+            <h1 className="mt-5 font-serif text-3xl font-bold text-ink">Thanks for your purchase!</h1>
             <p className="mt-2 text-muted">
-              Din betalning på {formatKr(amount)} är klar
-              {email ? <> — ett kvitto skickas till {email}.</> : "."}
+              Your payment of {formatKr(amount)} is complete
+              {email ? <> — a receipt is on its way to {email}.</> : "."}
             </p>
 
             <div className="mt-6 rounded-xl bg-cream p-4 text-left">
-              <p className="font-semibold text-ink">Sista steget: skapa ditt konto</p>
+              <p className="font-semibold text-ink">Last step: create your account</p>
               <p className="mt-1 text-sm text-muted">
-                Alla dina kurser finns att titta på direkt i {brand.name} Akademi. Skapa ett konto med{" "}
-                {email ? <strong>{email}</strong> : "din e-post"} (samma som vid köpet) så är du inne.
+                Your courses are ready to watch in {brand.name} Academy. Create an account with{" "}
+                {email ? <strong>{email}</strong> : "your email"} (the same one you paid with) and
+                you're in.
               </p>
             </div>
 
             <Link href={signupHref} className="btn-primary-lg mt-5">
-              Skapa konto & se mina kurser →
+              Create account & open my courses →
             </Link>
 
             <p className="mt-4 text-sm text-muted">
-              Din {membership.trialDays} dagars provtillgång har startat – därefter{" "}
-              {formatKr(membership.monthlyPriceOre)}/mån, avsluta när som helst. Frågor?{" "}
-              {brand.supportEmail}.
+              Your {membership.trialDays}-day free trial has started — then {monthly}/mo, cancel
+              anytime. Questions? {brand.supportEmail}.
             </p>
           </>
         ) : (
           <>
-            <h1 className="font-serif text-2xl font-bold text-ink">Vi hittar inget köp</h1>
+            <h1 className="font-serif text-2xl font-bold text-ink">We can't find that purchase</h1>
             <p className="mt-3 text-muted">
               {stripe
-                ? "Det gick inte att bekräfta din betalning. Har du precis betalat, vänta en stund och uppdatera sidan – eller kontakta oss."
-                : "Betalning är inte konfigurerad än (lägg in dina Stripe-nycklar i .env.local för att testa hela flödet)."}
+                ? "We couldn't confirm your payment. If you just paid, give it a moment and refresh — or reach out to us."
+                : "Payments aren't configured yet (add your Stripe keys in .env.local to test the full flow)."}
             </p>
             <Link href="/" className="btn-primary mt-6">
-              Till startsidan
+              Back to home
             </Link>
           </>
         )}

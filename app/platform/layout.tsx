@@ -13,7 +13,7 @@ export default function PlatformLayout({ children }: { children: React.ReactNode
           <Link href="/platform" className="flex items-baseline gap-2">
             <span className="text-xl font-bold text-rose-dark">{brand.name}</span>
             <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">
-              Akademi
+              Academy
             </span>
           </Link>
           <nav className="flex items-center gap-4 text-sm">
@@ -23,15 +23,15 @@ export default function PlatformLayout({ children }: { children: React.ReactNode
                   href="/platform/account"
                   className="font-semibold text-ink hover:text-rose"
                 >
-                  Mitt medlemskap
+                  My membership
                 </Link>
                 <a href="/api/auth/logout" className="font-semibold text-rose hover:text-rose-dark">
-                  Logga ut
+                  Sign out
                 </a>
               </>
             ) : (
               <Link href="/platform/login" className="font-semibold text-rose hover:text-rose-dark">
-                Logga in
+                Sign in
               </Link>
             )}
           </nav>

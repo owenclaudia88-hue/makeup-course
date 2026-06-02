@@ -18,19 +18,17 @@ export default function CheckoutForm({ paymentIntentId }: { paymentIntentId: str
 
     if (!stripe || !elements) return;
     if (!consent) {
-      setError("Du behöver godkänna villkoren för medlemskapet för att fortsätta.");
+      setError("Please accept the membership terms to continue.");
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError("Ange en giltig e-postadress så vi kan skicka kursen.");
+      setError("Please enter a valid email so we can send your course.");
       return;
     }
 
     setLoading(true);
 
     // Attach the email to the PaymentIntent server-side, then confirm.
-    // (No elements.submit() — that's only for the deferred integration; here
-    // Elements is created with a clientSecret and confirmPayment validates.)
     await fetch("/api/checkout/details", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -38,7 +36,7 @@ export default function CheckoutForm({ paymentIntentId }: { paymentIntentId: str
     }).catch(() => {});
 
     const returnUrl = `${window.location.origin}/thanks?payment_intent=${encodeURIComponent(
-      paymentIntentId
+      paymentIntentId,
     )}`;
 
     const { error: payError, paymentIntent } = await stripe.confirmPayment({
@@ -48,7 +46,7 @@ export default function CheckoutForm({ paymentIntentId }: { paymentIntentId: str
     });
 
     if (payError) {
-      setError(payError.message || "Betalningen kunde inte genomföras.");
+      setError(payError.message || "Payment could not be completed.");
       setLoading(false);
       return;
     }
@@ -57,19 +55,19 @@ export default function CheckoutForm({ paymentIntentId }: { paymentIntentId: str
       window.location.href = returnUrl;
       return;
     }
-    // Otherwise Stripe handled a redirect to return_url already.
+    // Otherwise Stripe handled the redirect to return_url already.
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="mb-1 block text-sm font-medium text-ink">E-post</label>
+        <label className="mb-1 block text-sm font-medium text-ink">Email</label>
         <input
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="din@email.se"
+          placeholder="you@example.com"
           className="w-full rounded-lg border border-blush bg-white px-3 py-2.5 text-ink outline-none focus:border-rose"
         />
       </div>
@@ -86,21 +84,21 @@ export default function CheckoutForm({ paymentIntentId }: { paymentIntentId: str
           className="mt-0.5 h-5 w-5 shrink-0 accent-rose"
         />
         <span>
-          Jag godkänner att jag betalar <strong>{formatKr(mainOffer.priceOre)}</strong> idag för
-          kursen och samtidigt startar en <strong>{membership.trialDays} dagars provtillgång</strong>{" "}
-          till {membership.name}. Efter provperioden förnyas medlemskapet automatiskt till{" "}
-          <strong>{formatKr(membership.monthlyPriceOre)}/månad</strong> tills jag avslutar. Jag kan
-          avsluta när som helst.
+          I agree to pay <strong>{formatKr(mainOffer.priceOre)}</strong> today for the course and
+          start a <strong>{membership.trialDays}-day free trial</strong> of {membership.name}.
+          After the trial it renews automatically at{" "}
+          <strong>{formatKr(membership.monthlyPriceOre)}/month</strong> until I cancel. I can
+          cancel anytime.
         </span>
       </label>
 
       {error && <p className="rounded-lg bg-rose/10 p-3 text-sm text-rose-dark">{error}</p>}
 
       <button type="submit" disabled={!stripe || loading} className="btn-primary-lg disabled:opacity-60">
-        {loading ? "Behandlar…" : `Betala ${formatKr(mainOffer.priceOre)} →`}
+        {loading ? "Processing…" : `Pay ${formatKr(mainOffer.priceOre)} →`}
       </button>
       <p className="text-center text-sm text-muted">
-        🔒 Säker betalning · provperioden kan avslutas när som helst
+        🔒 Secure payment · cancel your trial anytime
       </p>
     </form>
   );
