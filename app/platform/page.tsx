@@ -19,24 +19,21 @@ function CourseCard({ c, locked }: { c: Course; locked?: boolean }) {
         <CourseCover
           slug={c.slug}
           title={c.title}
+          category={c.category}
           className="aspect-[16/10] w-full"
         />
         {locked && (
-          <div className="absolute inset-0 flex items-center justify-center bg-ink/55">
-            <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-ink">
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-ink/55">
+            <span className="rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-ink">
               🔒 Unlock with membership
             </span>
           </div>
         )}
       </div>
-      <div className="flex grow flex-col p-5">
-        <span className="text-xs font-semibold uppercase tracking-wide text-rose">
-          {c.category}
-        </span>
-        <h3 className="mt-2 font-serif text-lg font-bold text-ink">{c.title}</h3>
-        <p className="mt-2 grow text-sm text-muted">{c.summary}</p>
-        <span className="mt-4 text-sm font-medium text-muted">
-          {lessonCount} lessons · {c.minutesPerDay} min/day
+      <div className="flex grow flex-col p-4">
+        <p className="grow text-sm text-muted">{c.summary}</p>
+        <span className="mt-3 text-xs font-medium text-muted">
+          {lessonCount} lessons · {c.minutesPerDay} min/day · {c.level}
         </span>
       </div>
     </>
