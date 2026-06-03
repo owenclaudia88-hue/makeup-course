@@ -274,15 +274,14 @@ export default function Home() {
         <div className="container-tight mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {featured.map((c) => (
             <div key={c.slug} className="card group flex flex-col overflow-hidden p-0 transition hover:border-rose">
-              <CourseCover slug={c.slug} title={c.title} className="aspect-[16/10] w-full" />
+              <CourseCover
+                slug={c.slug}
+                title={c.title}
+                category={c.category}
+                className="aspect-[16/10] w-full"
+              />
               <div className="flex grow flex-col p-4">
-                <span className="text-[11px] font-semibold uppercase tracking-wide text-rose">
-                  {c.category}
-                </span>
-                <h3 className="mt-1.5 font-serif text-base font-bold leading-snug text-ink">
-                  {c.title}
-                </h3>
-                <p className="mt-1.5 grow text-xs text-muted">{c.summary}</p>
+                <p className="grow text-xs text-muted">{c.summary}</p>
                 <span className="mt-3 text-[11px] font-medium text-muted">
                   {c.minutesPerDay} min/day · {c.level}
                 </span>

@@ -53,9 +53,9 @@ export type Course = {
   instructor?: Instructor;
 };
 
-/** Cover image path for a course (drop <slug>.webp into public/kurser/). */
+/** Cover image path for a course (drop <slug>.png into public/kurser/). */
 export function coverFor(slug: string): string {
-  return `/kurser/${slug}.webp`;
+  return `/kurser/${slug}.png`;
 }
 
 export const courses: Course[] = [
