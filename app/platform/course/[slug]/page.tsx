@@ -6,6 +6,7 @@ import { hasActiveMembership } from "@/lib/access";
 import { bunnyEmbedUrl } from "@/lib/bunny";
 import { membership } from "@/lib/offer";
 import { getCourseCompleted, getLastLesson } from "@/lib/progress";
+import { ownsCourse } from "@/lib/ownership";
 import CourseCover from "../../../components/CourseCover";
 import CoursePlayer from "../../../components/CoursePlayer";
 
@@ -34,7 +35,13 @@ export default async function CoursePage({
   const course = getCourse(params.slug);
   if (!course) notFound();
 
-  const locked = !course.core && !(await hasActiveMembership(session.email));
+  // Locked if NOT in legacy intro bundle AND NOT explicitly purchased AND
+  // NO active membership. Any one of those three unlocks the course.
+  const [explicitlyOwned, member] = await Promise.all([
+    ownsCourse(session.email, course.slug),
+    hasActiveMembership(session.email),
+  ]);
+  const locked = !course.core && !explicitlyOwned && !member;
 
   const rawModules =
     course.modules ??
