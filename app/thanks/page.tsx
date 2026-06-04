@@ -4,6 +4,7 @@ import { ensureMembershipSubscription } from "@/lib/membership";
 import { formatKr, brand, membership, membershipMonthlyPrice } from "@/lib/offer";
 import { getCurrentCurrency } from "@/lib/currencyServer";
 import { formatPrice } from "@/lib/currency";
+import { grantCourses } from "@/lib/ownership";
 import PurchaseEvent from "../components/PurchaseEvent";
 
 export const dynamic = "force-dynamic";
@@ -29,6 +30,14 @@ export default async function ThanksPage({
       email = pi.receipt_email || (typeof pm === "object" && pm?.billing_details?.email) || "";
       if (paid) {
         await ensureMembershipSubscription(stripe, pi, email);
+        // Grant lifetime ownership of every slug the buyer purchased.
+        // PaymentIntent metadata.productIds is a CSV of slugs (course +
+        // any bundled bonuses) set by /api/checkout.
+        const slugsCsv = pi.metadata?.productIds || "";
+        const slugs = slugsCsv.split(",").map((s) => s.trim()).filter(Boolean);
+        if (email && slugs.length > 0) {
+          await grantCourses(email, slugs);
+        }
       }
     } catch {
       paid = false;
