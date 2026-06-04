@@ -38,7 +38,9 @@ export type Course = {
   summary: string;
   // Text lessons (used when there's no PDF or video).
   lessons?: Lesson[];
-  // true = part of the paid bundle the buyer gets immediately ("Dina kurser").
+  // true = part of the legacy intro bundle (everyone who paid /checkout owns
+  // these forever). Per-user ownership data in lib/ownership.ts handles
+  // future per-course funnels.
   core?: boolean;
   // Filename in /protected. Renders the full PDF in an embedded reader.
   pdf?: string;
@@ -48,9 +50,19 @@ export type Course = {
   modules?: Module[];
   // Rich course-page content rendered below the player/lessons.
   description?: string[]; // long-form paragraphs
-  learningOutcomes?: string[]; // "Vad du lär dig"
-  whoFor?: string[]; // "För vem är kursen"
+  learningOutcomes?: string[]; // "What you'll learn"
+  whoFor?: string[]; // "Who this is for"
   instructor?: Instructor;
+  // Per-course landing-page sales config. When set, `/courses/<slug>` sells
+  // the course as a one-time purchase. Slugs listed in `bundle` are also
+  // granted (lifetime) on purchase.
+  landing?: {
+    tagline?: string; // short hero subhead
+    priceUsd?: number; // smallest unit (cents). Default: 3900 = $39.
+    regularPriceUsd?: number; // anchor price shown struck-through. Default: 19000 = $190.
+    bundle?: string[]; // other course slugs granted on purchase
+    socialProof?: string; // e.g. "Loved by 16,000+ members"
+  };
 };
 
 /** Cover image path for a course (drop <slug>.webp into public/kurser/). */
