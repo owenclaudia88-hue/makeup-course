@@ -4,6 +4,7 @@ import { courses, getLessonCount, type Course } from "@/lib/courses";
 import { hasActiveMembership } from "@/lib/access";
 import { brand, membership } from "@/lib/offer";
 import { getStreak } from "@/lib/progress";
+import { getOwnedSlugs } from "@/lib/ownership";
 import CourseCover from "../components/CourseCover";
 import PlattformGreeting from "../components/PlattformGreeting";
 
@@ -50,12 +51,15 @@ function CourseCard({ c, locked }: { c: Course; locked?: boolean }) {
 
 export default async function CatalogPage() {
   const session = requireSession();
-  const [member, streak] = await Promise.all([
+  const [member, streak, ownedSlugs] = await Promise.all([
     hasActiveMembership(session.email),
     getStreak(session.email),
+    getOwnedSlugs(session.email),
   ]);
-  const core = courses.filter((c) => c.core);
-  const rest = courses.filter((c) => !c.core);
+  // "Yours forever" = explicitly purchased + legacy `core: true` intro bundle.
+  const isOwned = (c: Course) => c.core === true || ownedSlugs.has(c.slug);
+  const yoursForever = courses.filter(isOwned);
+  const rest = courses.filter((c) => !isOwned(c));
 
   return (
     <main className="container-tight py-10">
@@ -91,13 +95,13 @@ export default async function CatalogPage() {
         <PlattformGreeting />
       </div>
 
-      {core.length > 0 && (
+      {yoursForever.length > 0 && (
         <>
           <h2 className="mt-8 font-serif text-xl font-bold text-ink">
             Yours forever
           </h2>
           <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {core.map((c) => (
+            {yoursForever.map((c) => (
               <CourseCard key={c.slug} c={c} />
             ))}
           </div>
