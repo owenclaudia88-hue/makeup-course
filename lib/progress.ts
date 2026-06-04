@@ -4,6 +4,9 @@ const COMPLETED = (email: string) => `progress:completed:${email.toLowerCase()}`
 const LAST = (email: string, slug: string) =>
   `progress:last:${email.toLowerCase()}:${slug}`;
 const STREAK = (email: string) => `progress:streak:${email.toLowerCase()}`;
+// Tracks which course slugs the user has touched (mark-complete or
+// navigation). Used by the dashboard's "Continue watching" section.
+const ACTIVE = (email: string) => `progress:active:${email.toLowerCase()}`;
 
 export type LessonPos = { m: number; l: number };
 export type Streak = { count: number; lastDate: string };
@@ -55,6 +58,7 @@ export async function setLastLesson(
   const redis = getRedis();
   if (!redis) return;
   await redis.set(LAST(email, slug), pos);
+  await redis.sadd(ACTIVE(email), slug);
 }
 
 export async function markComplete(
@@ -67,7 +71,15 @@ export async function markComplete(
   if (!redis) return;
   await redis.sadd(COMPLETED(email), idOf(slug, m, l));
   await redis.set(LAST(email, slug), { m, l });
+  await redis.sadd(ACTIVE(email), slug);
   await bumpStreak(email);
+}
+
+/** Slugs of courses the user has touched (started or completed any lesson in). */
+export async function getActiveCourseSlugs(email: string): Promise<string[]> {
+  const redis = getRedis();
+  if (!redis) return [];
+  return (await redis.smembers(ACTIVE(email))) as string[];
 }
 
 export async function unmarkComplete(
