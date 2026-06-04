@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "bunny:sync": "tsx scripts/sync-bunny-course.ts"
+    "bunny:sync": "tsx scripts/sync-bunny-course.ts",
+    "course:new": "tsx scripts/course-new.ts"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^6.4.0",
