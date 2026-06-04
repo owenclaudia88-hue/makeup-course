@@ -53,9 +53,9 @@ export type Course = {
   instructor?: Instructor;
 };
 
-/** Cover image path for a course (drop <slug>.png into public/kurser/). */
+/** Cover image path for a course (drop <slug>.webp into public/kurser/). */
 export function coverFor(slug: string): string {
-  return `/kurser/${slug}.png`;
+  return `/kurser/${slug}.webp`;
 }
 
 export const courses: Course[] = [
@@ -398,62 +398,65 @@ export const courses: Course[] = [
   {
     slug: "ansiktsyoga",
     pdf: "ansiktsyoga.pdf",
-    title: "Ansiktsyoga: Lyft ansiktet på 10 minuter",
+    title: "Face Yoga: Lift your face in 10 minutes",
     category: "Beauty",
     level: "Beginner",
     minutesPerDay: 10,
     summary:
-      "Enkla, dagliga ansiktsövningar som stärker musklerna, ökar cirkulationen och ger ett naturligt lyft – utan nålar eller dyra behandlingar.",
+      "Simple daily exercises that strengthen the muscles, boost circulation, and give a real, natural lift — no needles, no devices, no expensive appointments.",
     lessons: [
       {
-        title: "Varför ansiktsyoga fungerar",
-        insight: "Ansiktet har över 40 muskler – tränas de inte tappar de spänst, precis som kroppen.",
+        title: "Why face yoga actually works",
+        insight: "Your face has 40+ muscles — untrained, they lose tone the same way the body does.",
         body:
-          "Regelbunden, mild aktivering ökar blodflödet, stimulerar kollagen och motverkar att huden ser trött och insjunken ut. Nyckeln är mjuka, kontrollerade rörelser – inte att dra hårt i huden.",
-        checklist: ["Jag förstår att resultat kommer av regelbundenhet", "Jag arbetar mjukt, aldrig genom att dra i huden"],
-      },
-      {
-        title: "Uppvärmning & lymfdränage",
-        insight: "Börja alltid med att tömma lymfan – mindre svullnad ger direkt en skarpare kontur.",
-        body:
-          "Med rena händer, stryk lätt från mitten av ansiktet utåt mot öronen och sedan ner längs halsen. Lätt tryck räcker; lymfan ligger precis under huden.",
-        steps: [
-          "Stryk från näsan utåt över kinderna mot öronen (10 ggr)",
-          "Från käken längs halsen nedåt mot nyckelbenen (10 ggr)",
-          "Lätt knackning runt ögonen med ringfingret",
-        ],
-      },
-      {
-        title: "Kind- och käklyft",
-        insight: "Leendet du tränar är leendet som håller kinderna uppe.",
-        body:
-          "Dessa övningar aktiverar de stora muskler som bär upp mitten av ansiktet och definierar käklinjen.",
-        steps: [
-          "Le brett med stängd mun, tryck lätt uppåt på kindbenen, håll 5 sek × 10",
-          "Skjut fram underkäken lätt och känn spänningen längs käklinjen, håll 5 sek × 10",
-          "Blås upp kinderna med luft och flytta luften sida till sida × 10",
-        ],
-      },
-      {
-        title: "Panna och ögonparti",
-        insight: "Spänningar i pannan skapar linjer – mjuka upp istället för att rynka.",
-        body:
-          "Vi släpper spänning i pannan och öppnar blicken utan att överarbeta det känsliga området kring ögonen.",
-        steps: [
-          "Placera fingrarna över ögonbrynen, tryck lätt nedåt medan du höjer brynen × 10",
-          "Öppna ögonen stort, titta uppåt, håll 5 sek × 5",
-          "Massera tinningarna i små cirklar",
-        ],
-      },
-      {
-        title: "Din 10-minutersrutin",
-        insight: "Samma rutin varje dag slår en lång rutin då och då.",
-        body:
-          "Sätt ihop allt: 2 min lymf, 5 min lyftövningar, 2 min panna/ögon, 1 min avslappning. Gör den på morgonen eller medan du tittar på TV.",
+          "Regular gentle activation drives blood flow, stimulates collagen, and stops the face from looking tired and sunken. The key is soft, controlled moves — never dragging the skin.",
         checklist: [
-          "Jag har valt en fast tid på dagen",
-          "Jag gör hela sekvensen på cirka 10 minuter",
-          "Jag avslutar med några djupa andetag",
+          "I understand results come from consistency",
+          "I always work the muscles, not the skin",
+        ],
+      },
+      {
+        title: "Warm-up & lymph drainage",
+        insight: "Always start by clearing the lymph — less puffiness is an instantly sharper face.",
+        body:
+          "With clean hands, sweep lightly from the center of the face outward toward the ears, then down the neck. Light pressure is enough — lymph sits just under the skin.",
+        steps: [
+          "Sweep from the nose outward across the cheeks toward the ears × 10",
+          "From the jaw down the neck toward the collarbones × 10",
+          "Light tapping around the eyes with your ring finger",
+        ],
+      },
+      {
+        title: "Cheek & jaw lift",
+        insight: "The smile you train is the smile that holds your cheeks up.",
+        body:
+          "These moves activate the major muscles that hold the mid-face up and define the jawline.",
+        steps: [
+          "Smile wide with mouth closed, press up gently on the cheekbones, hold 5s × 10",
+          "Push the lower jaw forward, feel the line along the jaw, hold 5s × 10",
+          "Puff the cheeks with air and move it side to side × 10",
+        ],
+      },
+      {
+        title: "Forehead & eye area",
+        insight: "Tension in the forehead creates lines — soften it instead of frowning through it.",
+        body:
+          "We release forehead tension and open the gaze without overworking the delicate area around the eyes.",
+        steps: [
+          "Place fingers above the brows, press gently down while lifting the brows × 10",
+          "Open eyes wide, look up, hold 5s × 5",
+          "Massage the temples in small circles",
+        ],
+      },
+      {
+        title: "Your 10-minute routine",
+        insight: "The same routine every day beats a long routine once in a while.",
+        body:
+          "Put it all together: 2 min lymph, 5 min lifting, 2 min forehead/eyes, 1 min release. Do it first thing or while watching TV.",
+        checklist: [
+          "I have a fixed time of day for it",
+          "I run the whole sequence in about 10 minutes",
+          "I finish with a few deep breaths",
         ],
       },
     ],
@@ -461,150 +464,183 @@ export const courses: Course[] = [
   {
     slug: "hudvard-40",
     pdf: "hudvard-40.pdf",
-    title: "Hudvård efter 40",
+    title: "Skincare After 40: The minimalist routine that works",
     category: "Beauty",
     level: "Beginner",
     minutesPerDay: 5,
     summary:
-      "Bygg en enkel, effektiv hudvårdsrutin anpassad för moget hud – rätt ingredienser i rätt ordning för fukt, lyster och färre linjer.",
+      "Build a simple, effective skincare routine tuned for mature skin — the right ingredients in the right order for hydration, glow, and fewer lines.",
     lessons: [
       {
-        title: "Hur huden förändras",
-        insight: "Efter 40 minskar kollagen och naturlig olja – fokus blir fukt och skydd.",
+        title: "How your skin actually changes after 40",
+        insight: "Less collagen, less natural oil — the focus shifts to hydration and protection.",
         body:
-          "Tunnare hud, mindre talg och långsammare cellförnyelse gör att huden lättare blir torr och glanslös. Rutinen ska återfukta, skydda och varsamt förnya.",
+          "Thinner skin, less sebum, and slower cell renewal mean dryness and dullness creep in. The job of the routine becomes: hydrate, protect, and gently renew. Nothing fancy required.",
       },
       {
-        title: "Rengöring och fukt",
-        insight: "Skölj aldrig bort fukten – mild rengöring följt av återfuktning.",
+        title: "Cleansing & hydration",
+        insight: "Never strip — gentle cleansing followed by serious hydration.",
         body:
-          "Använd en krämig, mild rengöring kvälls­tid och bara vatten eller en mycket mild rengöring på morgonen. Lås in fukt med en serum + kräm medan huden är lätt fuktig.",
-        steps: ["Mild rengöring", "Hydrerande serum (t.ex. hyaluronsyra)", "Återfuktande kräm", "På morgonen: avsluta med SPF"],
+          "Use a creamy, gentle cleanser at night and just water or a very mild cleanser in the morning. Lock in moisture with a serum + cream while the skin is still slightly damp.",
+        steps: [
+          "Gentle cleanser",
+          "Hydrating serum (hyaluronic acid is a safe bet)",
+          "Moisturizer over still-damp skin",
+          "Morning: finish with SPF",
+        ],
       },
       {
-        title: "De aktiva ingredienserna som räknas",
-        insight: "Tre ingredienser gör störst skillnad: SPF, C-vitamin och retinol.",
+        title: "The three actives that actually move the needle",
+        insight: "SPF, vitamin C, and retinol — start there, ignore the rest.",
         body:
-          "SPF varje morgon är det mest anti-age du kan göra. C-vitamin på dagen ger lyster och skydd; retinol på kvällen stimulerar förnyelse – börja långsamt, 2 ggr/vecka.",
-        checklist: ["Jag använder SPF varje morgon", "Jag har introducerat retinol långsamt", "Jag tål mina aktiva ingredienser utan irritation"],
+          "SPF every morning is the single most anti-aging thing you can do. Vitamin C in the day adds glow and protection; retinol at night kickstarts renewal — start slow, twice a week.",
+        checklist: [
+          "I use SPF every morning",
+          "I'm introducing retinol slowly",
+          "My skin tolerates my actives without redness",
+        ],
       },
       {
-        title: "Kvällsrutinen",
-        insight: "Natten är när huden reparerar – ge den verktygen.",
+        title: "The evening routine",
+        insight: "Night is when skin repairs — give it the tools.",
         body:
-          "Rengör bort dagens smink och föroreningar, applicera behandlande produkter och lås med en rikare nattkräm. Konsekvens i några veckor ger synlig skillnad.",
+          "Remove the day's makeup and pollution, apply your treatment actives, and lock everything in with a richer night cream. A few weeks of consistency does the rest.",
       },
     ],
   },
   {
     slug: "battre-somn",
     pdf: "battre-somn.pdf",
-    title: "Bättre sömn: en kvällsrutin som funkar",
+    title: "Better Sleep: An evening routine that actually works",
     category: "Wellness",
     level: "Beginner",
     minutesPerDay: 15,
     summary:
-      "Somna lättare och vakna mer utvilad med en enkel kvällsrutin byggd på hur kroppens sömnsystem faktiskt fungerar.",
+      "Fall asleep easier and wake up actually rested with a simple evening routine built on how your body's sleep system really works.",
     lessons: [
       {
-        title: "Varför sömn är din bästa skönhetsbehandling",
-        insight: "Djupsömnen är när huden, hjärnan och humöret återställs.",
+        title: "Why sleep is your best beauty treatment",
+        insight: "Deep sleep is when the skin, brain, and mood are repaired.",
         body:
-          "Dålig sömn syns direkt: tråkig hud, svullna ögon, sämre humör och sug efter socker. Att förbättra sömnen är den mest underskattade vanan för hur du ser ut och mår.",
+          "Bad sleep shows up immediately — dull skin, puffy eyes, lower mood, sugar cravings. Improving sleep is the single most underrated habit for both how you look and how you feel.",
       },
       {
-        title: "Ljus och skärmar",
-        insight: "Ljus styr din dygnsrytm mer än något annat.",
+        title: "Light & screens",
+        insight: "Light controls your circadian rhythm more than anything else does.",
         body:
-          "Starkt och blått ljus på kvällen lurar hjärnan att det är dag. Dämpa lamporna 1–2 timmar före läggdags och lägg undan skärmar, eller använd nattläge.",
-        steps: ["Dämpa belysningen efter middagen", "Skärmfri sista 30–60 min", "Få dagsljus tidigt på morgonen"],
-      },
-      {
-        title: "Kvällsrutinen steg för steg",
-        insight: "Samma lugna sekvens varje kväll signalerar 'nu är det dags att sova'.",
-        body:
-          "Kroppen älskar förutsägbarhet. En kort, fast rutin blir en signal som gör att du somnar snabbare med tiden.",
+          "Bright and blue light at night tells the brain it's still daytime. Dim the lamps 1–2 hours before bed and put screens away, or at minimum use night mode.",
         steps: [
-          "Samma läggtid varje kväll",
-          "Svalt, mörkt och tyst sovrum",
-          "Lugn aktivitet: läsa, stretcha, dusch",
-          "Skriv ner morgondagens tankar för att tömma huvudet",
+          "Dim the lights after dinner",
+          "Screen-free in the last 30–60 minutes",
+          "Get daylight on your face early in the morning",
         ],
       },
       {
-        title: "Andning för att somna",
-        insight: "Långsam utandning lugnar nervsystemet på minuter.",
+        title: "Your evening routine, step by step",
+        insight: "The same calm sequence every night becomes a sleep signal.",
         body:
-          "Prova 4-7-8-andning: andas in 4 sek, håll 7 sek, andas ut 8 sek. Upprepa 4 gånger. Den långa utandningen aktiverar kroppens lugn-och-ro-system.",
-        checklist: ["Jag har en fast läggtid", "Sovrummet är svalt och mörkt", "Jag använder andning när tankarna snurrar"],
+          "Your body loves predictability. A short, fixed routine becomes a cue that helps you fall asleep faster over time.",
+        steps: [
+          "Same bedtime every night",
+          "Cool, dark, quiet bedroom",
+          "Calm activity: reading, stretching, shower",
+          "Write tomorrow's thoughts down to empty the head",
+        ],
+      },
+      {
+        title: "Breathing yourself to sleep",
+        insight: "A slow exhale calms the nervous system in minutes.",
+        body:
+          "Try 4-7-8 breathing: inhale 4s, hold 7s, exhale 8s. Repeat four times. The long exhale activates your body's rest-and-digest mode.",
+        checklist: [
+          "I have a fixed bedtime",
+          "My bedroom is cool and dark",
+          "I use breath when my thoughts spiral",
+        ],
       },
     ],
   },
   {
     slug: "lugn-pa-10-min",
-    title: "Lugn på 10 minuter: stresshantering",
+    title: "Calm in 10 Minutes: Stress management for real life",
     category: "Wellness",
     level: "Beginner",
     minutesPerDay: 10,
     summary:
-      "Praktiska verktyg för att varva ner snabbt, bryta stresspiraler och bygga in små lugn-stunder i en hektisk vardag.",
+      "Practical tools to wind down fast, break a stress spiral, and weave small pockets of calm into a busy day.",
     lessons: [
       {
-        title: "Vad stress gör med kroppen",
-        insight: "Stress är inte i huvudet – det är ett kroppsligt larm du kan stänga av.",
+        title: "What stress actually does to your body",
+        insight: "Stress isn't in your head — it's a body-wide alarm you can switch off.",
         body:
-          "Långvarig stress höjer kortisol, stör sömn, matsmältning och hud. Goda nyheter: du kan aktivt signalera till kroppen att faran är över.",
+          "Chronic stress raises cortisol and disrupts sleep, digestion, and skin. The good news: you can actively signal to your body that the danger is over.",
       },
       {
-        title: "Snabb nedvarvning",
-        insight: "Tre långa utandningar kan sänka stressnivån direkt.",
+        title: "Fast wind-down",
+        insight: "Three long exhales can drop your stress level in real time.",
         body:
-          "När du känner dig spänd: stanna upp, släpp axlarna, och ta tre medvetna andetag med längre utandning än inandning.",
-        steps: ["Släpp spänningen i käke och axlar", "Andas ut långsamt genom munnen", "Namnge känslan: 'jag känner stress' – det minskar dess grepp"],
+          "When you feel tense: stop, release the shoulders, and take three conscious breaths with a longer exhale than inhale.",
+        steps: [
+          "Release the jaw and shoulders",
+          "Exhale slowly through the mouth",
+          "Name the feeling: 'I'm feeling stressed' — naming it loosens its grip",
+        ],
       },
       {
-        title: "Daglig mikropaus",
-        insight: "Korta pauser ofta slår en lång paus sällan.",
+        title: "The daily micro-break",
+        insight: "Frequent short breaks beat one long break, every time.",
         body:
-          "Lägg in 2–3 minuters mikropauser i dagen: en kort promenad, ett glas vatten i lugn, eller bara blicken ut genom fönstret. Det nollställer nervsystemet.",
-        checklist: ["Jag tar minst en mikropaus per förmiddag", "Jag använder andning när stressen stiger", "Jag avslutar dagen med något lugnande"],
+          "Slip 2–3 minute micro-breaks into your day: a short walk, a glass of water in quiet, or even just a stare out the window. It resets your nervous system.",
+        checklist: [
+          "I take at least one micro-break each morning",
+          "I use breath when stress rises",
+          "I close my day with something calming",
+        ],
       },
     ],
   },
   {
     slug: "sjalvkansla",
-    title: "Självkänsla & självförtroende",
+    title: "Self-Esteem & Confidence: The quiet rebuild",
     category: "Personal growth",
     level: "Intermediate",
     minutesPerDay: 10,
     summary:
-      "Förstå skillnaden mellan självkänsla och självförtroende – och bygg båda med konkreta, dagliga övningar.",
+      "Understand the real difference between self-esteem and confidence — then build both with concrete daily practices that actually compound.",
     lessons: [
       {
-        title: "Självkänsla vs självförtroende",
-        insight: "Självförtroende är vad du gör; självkänsla är att du duger oavsett.",
+        title: "Self-esteem vs confidence",
+        insight: "Confidence is what you can do; self-esteem is that you're enough either way.",
         body:
-          "Du kan ha högt självförtroende på jobbet men låg självkänsla. De byggs på olika sätt – och båda går att stärka.",
+          "You can have high confidence at work and low self-esteem underneath. They're built differently — and both can be strengthened with intention.",
       },
       {
-        title: "Den inre kritikern",
-        insight: "Du behöver inte tro på allt din inre röst säger.",
+        title: "The inner critic",
+        insight: "You don't have to believe every voice in your head.",
         body:
-          "Lägg märke till hård självkritik och fråga: skulle jag säga så till en vän? Byt ut domen mot något du faktiskt skulle säga till någon du bryr dig om.",
-        steps: ["Fånga den kritiska tanken", "Fråga om den är sann och hjälpsam", "Formulera om den vänligt men ärligt"],
+          "Notice the harsh self-criticism and ask: would I say this to a friend? Replace the verdict with what you'd actually say to someone you care about.",
+        steps: [
+          "Catch the critical thought",
+          "Ask: is it true and useful?",
+          "Rewrite it kindly but honestly",
+        ],
       },
       {
-        title: "Kroppsspråk förändrar hur du känner",
-        insight: "Hållningen påverkar humöret lika mycket som humöret påverkar hållningen.",
+        title: "Body language changes how you feel",
+        insight: "Posture shapes mood just as much as mood shapes posture.",
         body:
-          "Räta på dig, sänk axlarna, lyft blicken. Bara någon minut i en öppen, stabil hållning kan höja känslan av lugn och säkerhet.",
+          "Stand tall, lower the shoulders, lift the gaze. Even a minute in an open, stable posture can raise the felt sense of calm and steadiness.",
       },
       {
-        title: "Daglig praktik",
-        insight: "Självkänsla byggs av små bevis du ger dig själv varje dag.",
+        title: "The daily practice",
+        insight: "Self-esteem is built from small proofs you give yourself every day.",
         body:
-          "Håll ett litet löfte till dig själv dagligen och notera tre saker du gjorde bra. Med tiden ändras din inre berättelse om vem du är.",
-        checklist: ["Jag märker och mjukar upp självkritik", "Jag håller små löften till mig själv", "Jag noterar dagligen något jag gjorde bra"],
+          "Keep one small promise to yourself daily and note three things you did well. Over time, the inner story about who you are quietly rewrites itself.",
+        checklist: [
+          "I notice and soften self-criticism",
+          "I keep small promises to myself",
+          "I write down one thing I did well each day",
+        ],
       },
     ],
   },
