@@ -2,7 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-type Lesson = { title: string; url: string; durationSeconds?: number };
+type Lesson = {
+  title: string;
+  url: string;
+  durationSeconds?: number;
+  takeaways?: string[];
+};
 type Module = { title: string; lessons: Lesson[] };
 
 type Props = {
@@ -12,11 +17,33 @@ type Props = {
   initialCompleted: string[]; // "m::l"
 };
 
+const FEELINGS = [
+  { key: "struggling", label: "Struggling", emoji: "😔" },
+  { key: "processing", label: "Processing", emoji: "🤔" },
+  { key: "hopeful", label: "Hopeful", emoji: "🌱" },
+  { key: "relieved", label: "Relieved", emoji: "😊" },
+  { key: "inspired", label: "Inspired", emoji: "✨" },
+];
+
+const AFFIRMATIONS = [
+  "You're doing something good for yourself right now.",
+  "Tiny rituals, real change.",
+  "Five minutes counts.",
+  "Be patient with the process.",
+  "Consistency is the work.",
+  "Small steps, kept up, beat big plans abandoned.",
+  "The point isn't to be perfect. It's to come back tomorrow.",
+  "This is care, not a chore.",
+];
+function affirmationFor(m: number, l: number) {
+  return AFFIRMATIONS[Math.abs(m * 13 + l * 7) % AFFIRMATIONS.length];
+}
+
 function fmt(s?: number): string {
   if (!s) return "";
-  const m = Math.floor(s / 60);
+  const mm = Math.floor(s / 60);
   const ss = s % 60;
-  return `${m}:${ss.toString().padStart(2, "0")}`;
+  return `${mm}:${ss.toString().padStart(2, "0")}`;
 }
 
 async function persistProgress(body: object) {
@@ -40,6 +67,11 @@ export default function CoursePlayer({
     new Set(initialCompleted),
   );
 
+  // Reflection state for the current lesson
+  const [feeling, setFeeling] = useState<string>("");
+  const [reflectionText, setReflectionText] = useState<string>("");
+  const [reflectionSaved, setReflectionSaved] = useState<"idle" | "saving" | "saved">("idle");
+
   const flat = useMemo(
     () =>
       modules.flatMap((mod, mi) =>
@@ -53,12 +85,11 @@ export default function CoursePlayer({
   const isDone = completed.has(currentKey);
   const totalLessons = flat.length;
   const doneCount = completed.size;
-  const flatIdx = flat.findIndex(
-    (x) => x.mIdx === pos.m && x.lIdx === pos.l,
-  );
+  const flatIdx = flat.findIndex((x) => x.mIdx === pos.m && x.lIdx === pos.l);
   const next = flat[flatIdx + 1];
   const prev = flat[flatIdx - 1];
 
+  // Persist position + URL state on lesson change.
   useEffect(() => {
     if (typeof window !== "undefined") {
       const url = new URL(window.location.href);
@@ -67,6 +98,30 @@ export default function CoursePlayer({
       window.history.replaceState({}, "", url.toString());
     }
     persistProgress({ action: "position", slug, m: pos.m, l: pos.l });
+  }, [slug, pos]);
+
+  // Load any prior reflection for the current lesson.
+  useEffect(() => {
+    let cancelled = false;
+    setFeeling("");
+    setReflectionText("");
+    setReflectionSaved("idle");
+    fetch(
+      `/api/reflection?slug=${encodeURIComponent(slug)}&m=${pos.m}&l=${pos.l}`,
+    )
+      .then((r) => r.json())
+      .then((data) => {
+        if (cancelled) return;
+        const r = data?.reflection;
+        if (r) {
+          setFeeling(r.feeling ?? "");
+          setReflectionText(r.text ?? "");
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
   }, [slug, pos]);
 
   if (!current) return null;
@@ -83,6 +138,27 @@ export default function CoursePlayer({
       m: pos.m,
       l: pos.l,
     });
+  }
+
+  async function saveReflection(nextFeeling: string, nextText: string) {
+    setReflectionSaved("saving");
+    try {
+      await fetch("/api/reflection", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          slug,
+          m: pos.m,
+          l: pos.l,
+          feeling: nextFeeling,
+          text: nextText,
+        }),
+      });
+      setReflectionSaved("saved");
+      setTimeout(() => setReflectionSaved("idle"), 1500);
+    } catch {
+      setReflectionSaved("idle");
+    }
   }
 
   return (
@@ -122,6 +198,78 @@ export default function CoursePlayer({
           </button>
         </div>
 
+        {/* Takeaways — when defined on the lesson */}
+        {current.takeaways && current.takeaways.length > 0 && (
+          <section className="card mt-6 p-5">
+            <p className="eyebrow mb-2">Key takeaways</p>
+            <ul className="space-y-2">
+              {current.takeaways.map((t, i) => (
+                <li key={i} className="flex items-start gap-3 text-ink">
+                  <span className="mt-0.5 font-bold text-rose">✓</span>
+                  <span>{t}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {/* Reflection — emoji + private text */}
+        <section className="card mt-6 p-5">
+          <div className="flex items-center justify-between">
+            <p className="eyebrow">Reflect on this lesson</p>
+            <span className="text-[11px] text-muted">🔒 Private — just for you</span>
+          </div>
+          <p className="mt-1 text-sm text-muted">
+            How are you feeling after this one?
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {FEELINGS.map((f) => {
+              const active = feeling === f.key;
+              return (
+                <button
+                  key={f.key}
+                  type="button"
+                  onClick={() => {
+                    const next = active ? "" : f.key;
+                    setFeeling(next);
+                    saveReflection(next, reflectionText);
+                  }}
+                  className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition ${
+                    active
+                      ? "border-rose bg-rose/10 text-rose-dark"
+                      : "border-blush bg-white text-ink hover:border-rose"
+                  }`}
+                >
+                  <span>{f.emoji}</span>
+                  <span className="font-medium">{f.label}</span>
+                </button>
+              );
+            })}
+          </div>
+          <textarea
+            placeholder="A few thoughts… this is just for you."
+            value={reflectionText}
+            onChange={(e) => setReflectionText(e.target.value)}
+            onBlur={() => saveReflection(feeling, reflectionText)}
+            rows={3}
+            className="mt-3 w-full resize-none rounded-lg border border-blush bg-cream/40 p-3 text-sm text-ink outline-none placeholder:text-muted/70 focus:border-rose"
+          />
+          <p className="mt-1 text-right text-[11px] text-muted">
+            {reflectionSaved === "saving"
+              ? "Saving…"
+              : reflectionSaved === "saved"
+                ? "Saved ✓"
+                : "Saves automatically"}
+          </p>
+        </section>
+
+        {/* Affirmation between lessons */}
+        <div className="mt-6 rounded-2xl border border-blush bg-cream/60 p-4 text-center">
+          <p className="font-serif text-base italic text-ink/80">
+            "{affirmationFor(pos.m, pos.l)}"
+          </p>
+        </div>
+
         <div className="mt-4 flex items-center justify-between gap-3">
           <button
             type="button"
@@ -144,7 +292,7 @@ export default function CoursePlayer({
         {next ? (
           <div className="card mt-6 flex items-center gap-4 p-5">
             <div className="text-3xl">▶️</div>
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               <p className="eyebrow">Up next</p>
               <p className="truncate font-semibold text-ink">{next.title}</p>
               {next.durationSeconds ? (
@@ -184,9 +332,7 @@ export default function CoursePlayer({
             <div
               className="h-full bg-rose transition-all"
               style={{
-                width: `${Math.round(
-                  (doneCount / Math.max(totalLessons, 1)) * 100,
-                )}%`,
+                width: `${Math.round((doneCount / Math.max(totalLessons, 1)) * 100)}%`,
               }}
             />
           </div>

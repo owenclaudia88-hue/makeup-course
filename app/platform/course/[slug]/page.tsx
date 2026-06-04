@@ -144,13 +144,19 @@ export default async function CoursePage({
       {mode === "video" && (
         <CoursePlayer
           slug={course.slug}
-          modules={resolvedModules.map((m) => ({
+          modules={resolvedModules.map((m, mi) => ({
             title: m.title,
-            lessons: m.lessons.map((l) => ({
-              title: l.title,
-              url: l.url as string,
-              durationSeconds: l.durationSeconds,
-            })),
+            lessons: m.lessons.map((l, li) => {
+              // Pull takeaways from the underlying course data (modules are
+              // resolved with bunny URLs but lose takeaways in the projection).
+              const src = course.modules?.[mi]?.lessons?.[li];
+              return {
+                title: l.title,
+                url: l.url as string,
+                durationSeconds: l.durationSeconds,
+                takeaways: src?.takeaways,
+              };
+            }),
           }))}
           initial={{ m: safeM, l: safeL }}
           initialCompleted={completed.map((c) => `${c.m}::${c.l}`)}

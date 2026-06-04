@@ -9,12 +9,16 @@ export type Lesson = {
   body: string;
   steps?: string[];
   checklist?: string[];
+  /** Engagement: 3–5 short takeaways rendered after the lesson body. */
+  takeaways?: string[];
 };
 
 export type VideoLesson = {
   title: string;
   videoId?: string; // Bunny Stream GUID; assigned by sync once uploaded
   durationSeconds?: number; // Source-of-truth for the sync script's duration match
+  /** Engagement: 3–5 short takeaways rendered under the video. */
+  takeaways?: string[];
 };
 
 export type Module = {
